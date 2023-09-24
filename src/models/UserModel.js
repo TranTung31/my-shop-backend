@@ -4,11 +4,11 @@ const mongoose = require("mongoose"); // Import Mongoose
 const userSchema = new mongoose.Schema(
   {
     // Các trường dữ liệu của schema
-    name: { type: String, required: true },
+    name: { type: String },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     isAdmin: { type: Boolean, default: false, required: true },
-    phone: { type: Number, required: true },
+    phone: { type: Number },
   },
   {
     // - Các tùy chọn của schema
