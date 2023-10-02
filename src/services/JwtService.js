@@ -24,7 +24,7 @@ const genneralRefreshToken = async (payload) => {
   return refresh_token;
 };
 
-const refreshTokenUser = (token) => {
+const refreshTokenJwtService = (token) => {
   return new Promise((resolve, reject) => {
     try {
       console.log("token", token);
@@ -32,13 +32,18 @@ const refreshTokenUser = (token) => {
         if (err) {
           resolve({
             status: "ERROR",
-            message: "The authentication",
+            message: "The authemtication",
           });
         }
-        console.log("user", user);
+        const { payload } = user;
+        const access_token = await genneralAccessToken({
+          id: payload?.id,
+          isAdmin: payload?.isAdmin,
+        });
         resolve({
           status: "OK",
           message: "Success",
+          access_token,
         });
       });
     } catch (e) {
@@ -50,5 +55,5 @@ const refreshTokenUser = (token) => {
 module.exports = {
   genneralAccessToken,
   genneralRefreshToken,
-  refreshTokenUser,
+  refreshTokenJwtService,
 };
