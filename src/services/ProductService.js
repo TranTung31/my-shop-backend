@@ -113,13 +113,17 @@ const deleteProduct = (id) => {
   });
 };
 
-const getAllProduct = () => {
+const getAllProduct = (limit, page) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const product = await Product.find();
+      const totalProduct = await Product.count();
+      const product = await Product.find().limit(limit).skip(page * limit);
       resolve({
         status: "OK",
         message: "SUCCESS",
+        totalPage: Math.ceil(totalProduct / limit),
+        pageCurrent: page + 1,
+        totalProduct: totalProduct,
         data: product,
       });
     } catch (e) {
