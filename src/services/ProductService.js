@@ -113,11 +113,44 @@ const deleteProduct = (id) => {
   });
 };
 
-const getAllProduct = (limit, page) => {
+const getAllProduct = (limit, page, sort, filter) => {
   return new Promise(async (resolve, reject) => {
     try {
       const totalProduct = await Product.count();
-      const product = await Product.find().limit(limit).skip(page * limit);
+      if (filter) {
+        const allProductFilter = await Product.find({
+          [filter[0]]: { $regex: filter[1] },
+        })
+          .limit(limit)
+          .skip(page * limit);
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          totalPage: Math.ceil(totalProduct / limit),
+          pageCurrent: page + 1,
+          totalProduct: totalProduct,
+          data: allProductFilter,
+        });
+      }
+      if (sort) {
+        const objectSort = {};
+        objectSort[sort[1]] = sort[0];
+        const allProductSort = await Product.find()
+          .limit(limit)
+          .skip(page * limit)
+          .sort(objectSort);
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          totalPage: Math.ceil(totalProduct / limit),
+          pageCurrent: page + 1,
+          totalProduct: totalProduct,
+          data: allProductSort,
+        });
+      }
+      const product = await Product.find()
+        .limit(limit)
+        .skip(page * limit);
       resolve({
         status: "OK",
         message: "SUCCESS",
