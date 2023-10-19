@@ -36,7 +36,7 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
     const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const isCheckEmail = regex.test(email);
-    if (!email || !password ) {
+    if (!email || !password) {
       return res.status(200).json({
         status: "ERR",
         message: "The input is required",
@@ -48,7 +48,13 @@ const loginUser = async (req, res) => {
       });
     }
     const respone = await UserService.loginUser(req.body);
-    return res.status(200).json(respone);
+    const { refresh_token, ...newRespone } = respone;
+    res.cookie("refresh_token", refresh_token, {
+      httpOnly: true,
+      secure: false,
+      samesite: 'strict'
+    })
+    return res.status(200).json(newRespone);
   } catch (e) {
     return res.status(404).json({
       message: e,
@@ -124,7 +130,8 @@ const getDetailUser = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-    const token = req.headers.token.split(' ')[1];
+    console.log("req.cookies.refresh_token: ", req.cookies.refresh_token);
+    const token = req.cookies.refresh_token;
     if (!token) {
       return res.status(200).json({
         status: "ERR",
