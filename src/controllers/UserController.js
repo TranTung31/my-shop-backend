@@ -147,9 +147,24 @@ const refreshToken = async (req, res) => {
   }
 };
 
+const logOutUser = async (req, res) => {
+  try {
+    res.clearCookie("refresh_token");
+    return res.status(200).json({
+      status: "OK",
+      message: "Logout sucessfully"
+    })
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    })
+  }
+}
+
 module.exports = {
   createUser,
   loginUser,
+  logOutUser,
   updateUser,
   deleteUser,
   getAllUser,
