@@ -12,7 +12,7 @@ const authMiddleware = (req, res, next) => {
       });
     }
     const { payload } = user;
-    if (payload?.isAdmin) {
+    if (user?.isAdmin) {
       next();
     } else {
       return res.status(404).json({
