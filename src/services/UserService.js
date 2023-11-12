@@ -4,7 +4,7 @@ const { genneralAccessToken, genneralRefreshToken } = require("./JwtService");
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
-    const { email, password, confirmPassword} = newUser;
+    const { email, password, confirmPassword } = newUser;
     try {
       const checkUser = await User.findOne({
         email: email,
@@ -19,7 +19,7 @@ const createUser = (newUser) => {
       const createdUser = await User.create({
         email,
         password: hash,
-        confirmPassword: hash
+        confirmPassword: hash,
       });
       if (createdUser) {
         resolve({
@@ -159,6 +159,20 @@ const getDetailUser = (id) => {
   });
 };
 
+const deleteManyUser = (ids) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await User.deleteMany({ _id: ids });
+      resolve({
+        status: "OK",
+        message: "Delete many user success!",
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -166,4 +180,5 @@ module.exports = {
   deleteUser,
   getAllUser,
   getDetailUser,
+  deleteManyUser,
 };

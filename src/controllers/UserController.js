@@ -148,11 +148,23 @@ const refreshToken = async (req, res) => {
 
 const logOutUser = async (req, res) => {
   try {
-    res.clearCookie("refresh_token");
+    // res.clearCookie("refresh_token");
     return res.status(200).json({
       status: "OK",
       message: "Logout sucessfully"
     })
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    })
+  }
+}
+
+const deleteManyUser = async (req, res) => {
+  try {
+    const ids = req.body;
+    const respone = await UserService.deleteManyUser(ids);
+    return res.status(200).json(respone);
   } catch (e) {
     return res.status(404).json({
       message: e,
@@ -169,4 +181,5 @@ module.exports = {
   getAllUser,
   getDetailUser,
   refreshToken,
+  deleteManyUser,
 };
