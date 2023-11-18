@@ -79,7 +79,7 @@ const getAllProduct = async (req, res) => {
   try {
     const { limit, page, sort, filter } = req.query;
     const response = await ProductService.getAllProduct(
-      Number(limit) || 8,
+      Number(limit) || 12,
       Number(page) || 0,
       sort,
       filter
@@ -96,11 +96,22 @@ const deleteManyProduct = async (req, res) => {
   try {
     const ids = req.body;
     const response = await ProductService.deleteManyProduct(ids);
-    return res.status(200).json(response)
+    return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
       message: e,
-    })
+    });
+  }
+};
+
+const getAllType = async (req, res) => {
+  try {
+    const response = await ProductService.getAllType();
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
   }
 };
 
@@ -111,4 +122,5 @@ module.exports = {
   deleteProduct,
   getAllProduct,
   deleteManyProduct,
+  getAllType,
 };
