@@ -148,17 +148,30 @@ const getAllProduct = (limit, page, sort, filter) => {
           data: allProductSort,
         });
       }
+      if (limit) {
+        const product = await Product.find()
+          .limit(limit)
+          .skip(page * limit);
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          totalPage: Math.ceil(totalProduct / limit),
+          pageCurrent: page + 1,
+          totalProduct: totalProduct,
+          data: product,
+        });
+      }
       const product = await Product.find()
-        .limit(limit)
-        .skip(page * limit);
-      resolve({
-        status: "OK",
-        message: "SUCCESS",
-        totalPage: Math.ceil(totalProduct / limit),
-        pageCurrent: page + 1,
-        totalProduct: totalProduct,
-        data: product,
-      });
+          .limit(limit)
+          .skip(page * limit);
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          totalPage: Math.ceil(totalProduct / limit),
+          pageCurrent: page + 1,
+          totalProduct: totalProduct,
+          data: product,
+        });
     } catch (e) {
       reject(e);
     }
