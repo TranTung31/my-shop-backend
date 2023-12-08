@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
     isAdmin: { type: Boolean, default: false, required: true },
     phone: { type: Number },
     address: { type: String },
+    city: { type: String },
     avatar: { type: String },
   },
   {
