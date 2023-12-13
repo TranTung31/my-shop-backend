@@ -14,7 +14,7 @@ const createOrder = async (req, res) => {
       totalPrice,
       userId,
     } = req.body;
-    if (!fullName || !address || !city || !phone || !paymentMethod || !itemsPrice || !shippingPrice || !totalPrice || !userId) {
+    if (!fullName || !address || !city || !phone || !paymentMethod || !itemsPrice || !totalPrice || !userId) {
         return res.status(404).json({
             status: "ERROR",
             message: "The input is required!"
