@@ -74,7 +74,7 @@ const getDetailProduct = (id) => {
       if (checkProduct === null) {
         resolve({
           status: "ERROR",
-          message: "The product is not definded",
+          message: "The product is not definded!",
         });
       } else {
         const product = await Product.findById(id);
