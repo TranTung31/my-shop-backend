@@ -27,8 +27,6 @@ const createOrder = (order) => {
           { new: true }
         );
 
-        console.log("productData: ", productData);
-
         if (productData) {
           const newOrder = await Order.create({
             orderItems,
@@ -71,17 +69,16 @@ const createOrder = (order) => {
         status: "OK",
         message: "SUCCESS",
       });
-      console.log("results: ", results);
     } catch (e) {
       reject(e);
     }
   });
 };
 
-const getOrderDetail = (userId) => {
+const getAllOrder = (userId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const checkUser = await Order.findOne({
+      const checkUser = await Order.find({
         user: userId,
       });
       if (checkUser === null) {
@@ -102,7 +99,55 @@ const getOrderDetail = (userId) => {
   });
 };
 
+const getOrderDetail = (orderId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkOrder = await Order.findById({
+        _id: orderId,
+      });
+      if (checkOrder === null) {
+        resolve({
+          status: "ERROR",
+          message: "The order id is not definded!",
+        });
+      } else {
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          data: checkOrder,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const deleteOrder = (orderId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkOrder = await Order.findByIdAndDelete(orderId);
+      if (checkOrder === null) {
+        resolve({
+          status: "ERROR",
+          message: "The order id is not definded!",
+        });
+      } else {
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          data: checkOrder,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createOrder,
+  getAllOrder,
   getOrderDetail,
+  deleteOrder,
 };
