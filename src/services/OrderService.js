@@ -15,8 +15,9 @@ const createOrder = (order) => {
         shippingPrice,
         totalPrice,
         userId,
+        isPaid,
+        paidAt,
       } = order;
-
       const result = orderItems.map(async (order) => {
         const productData = await Product.findOneAndUpdate(
           {
@@ -41,6 +42,8 @@ const createOrder = (order) => {
             shippingPrice,
             totalPrice,
             user: userId,
+            isPaid,
+            paidAt,
           });
 
           if (newOrder) {
