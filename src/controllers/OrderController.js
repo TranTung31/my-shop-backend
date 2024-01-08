@@ -84,7 +84,7 @@ const deleteOrder = async (req, res) => {
         message: "The order id is required!",
       });
     }
-    const response = await OrderService.deleteOrder(orderId);
+    const response = await OrderService.deleteOrder(orderId, req.body);
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({

@@ -123,22 +123,41 @@ const getOrderDetail = (orderId) => {
   });
 };
 
-const deleteOrder = (orderId) => {
+const deleteOrder = (orderId, orderItems) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const checkOrder = await Order.findByIdAndDelete(orderId);
-      if (checkOrder === null) {
-        resolve({
-          status: "ERROR",
-          message: "The order id is not definded!",
-        });
-      } else {
-        resolve({
-          status: "OK",
-          message: "SUCCESS",
-          data: checkOrder,
-        });
-      }
+      const result = orderItems.map(async (order) => {
+        const productData = await Product.findOneAndUpdate(
+          {
+            _id: order?.product,
+            selled: { $gte: order?.amount },
+          },
+          { $inc: { countInStock: +order?.amount, selled: -order?.amount } },
+          { new: true }
+        );
+
+        if (productData) {
+          const checkOrder = await Order.findByIdAndDelete(orderId);
+          if (checkOrder === null) {
+            resolve({
+              status: "ERROR",
+              message: "The order id is not definded!",
+            });
+          } else {
+            resolve({
+              status: "OK",
+              message: "SUCCESS",
+              data: checkOrder,
+            });
+          }
+        } else {
+          return {
+            status: "ERROR",
+            message: "The productData is not definded!",
+            id: order?.product,
+          };
+        }
+      });
     } catch (e) {
       reject(e);
     }
