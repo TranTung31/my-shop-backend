@@ -1,5 +1,6 @@
 const Order = require("../models/OrderProduct");
 const Product = require("../models/ProductModel");
+const EmailService = require("./EmailService");
 
 const createOrder = (order) => {
   return new Promise(async (resolve, reject) => {
@@ -17,6 +18,7 @@ const createOrder = (order) => {
         userId,
         isPaid,
         paidAt,
+        email,
       } = order;
       const result = orderItems.map(async (order) => {
         const productData = await Product.findOneAndUpdate(
@@ -29,29 +31,30 @@ const createOrder = (order) => {
         );
 
         if (productData) {
-          const newOrder = await Order.create({
-            orderItems,
-            shippingAddress: {
-              fullName,
-              address,
-              city,
-              phone,
-            },
-            paymentMethod,
-            itemsPrice,
-            shippingPrice,
-            totalPrice,
-            user: userId,
-            isPaid,
-            paidAt,
-          });
+          // const newOrder = await Order.create({
+          //   orderItems,
+          //   shippingAddress: {
+          //     fullName,
+          //     address,
+          //     city,
+          //     phone,
+          //   },
+          //   paymentMethod,
+          //   itemsPrice,
+          //   shippingPrice,
+          //   totalPrice,
+          //   user: userId,
+          //   isPaid,
+          //   paidAt,
+          // });
 
-          if (newOrder) {
-            return {
-              status: "OK",
-              message: "SUCCESS",
-            };
-          }
+          // if (newOrder) {
+          //   await EmailService.sendEmailCreateOrder(email, orderItems);
+          //   return {
+          //     status: "OK",
+          //     message: "SUCCESS",
+          //   };
+          // }
         } else {
           return {
             status: "OK",
@@ -60,6 +63,30 @@ const createOrder = (order) => {
           };
         }
       });
+      const newOrder = await Order.create({
+        orderItems,
+        shippingAddress: {
+          fullName,
+          address,
+          city,
+          phone,
+        },
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        totalPrice,
+        user: userId,
+        isPaid,
+        paidAt,
+      });
+
+      if (newOrder) {
+        await EmailService.sendEmailCreateOrder(email, orderItems);
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+        });
+      }
       const results = await Promise.all(result);
       const newData = results.filter((item) => item.id);
       if (newData.length > 0) {
@@ -68,10 +95,6 @@ const createOrder = (order) => {
           message: `Sản phẩm có id ${newData.join(",")} đã hết hàng!`,
         });
       }
-      resolve({
-        status: "OK",
-        message: "SUCCESS",
-      });
     } catch (e) {
       reject(e);
     }
