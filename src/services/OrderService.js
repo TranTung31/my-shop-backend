@@ -12,6 +12,7 @@ const createOrder = (order) => {
         city,
         phone,
         paymentMethod,
+        deliveryMethod,
         itemsPrice,
         shippingPrice,
         totalPrice,
@@ -31,30 +32,10 @@ const createOrder = (order) => {
         );
 
         if (productData) {
-          // const newOrder = await Order.create({
-          //   orderItems,
-          //   shippingAddress: {
-          //     fullName,
-          //     address,
-          //     city,
-          //     phone,
-          //   },
-          //   paymentMethod,
-          //   itemsPrice,
-          //   shippingPrice,
-          //   totalPrice,
-          //   user: userId,
-          //   isPaid,
-          //   paidAt,
-          // });
-
-          // if (newOrder) {
-          //   await EmailService.sendEmailCreateOrder(email, orderItems);
-          //   return {
-          //     status: "OK",
-          //     message: "SUCCESS",
-          //   };
-          // }
+          return {
+            status: "OK",
+            message: "SUCCESS",
+          };
         } else {
           return {
             status: "OK",
@@ -63,37 +44,44 @@ const createOrder = (order) => {
           };
         }
       });
-      const newOrder = await Order.create({
-        orderItems,
-        shippingAddress: {
-          fullName,
-          address,
-          city,
-          phone,
-        },
-        paymentMethod,
-        itemsPrice,
-        shippingPrice,
-        totalPrice,
-        user: userId,
-        isPaid,
-        paidAt,
-      });
 
-      if (newOrder) {
-        await EmailService.sendEmailCreateOrder(email, orderItems);
-        resolve({
-          status: "OK",
-          message: "SUCCESS",
-        });
-      }
       const results = await Promise.all(result);
       const newData = results.filter((item) => item.id);
       if (newData.length > 0) {
+        const arrId = [];
+        newData.forEach((item) => {
+          arrId.push(item.id);
+        })
         resolve({
           status: "ERROR",
-          message: `Sản phẩm có id ${newData.join(",")} đã hết hàng!`,
+          message: `Sản phẩm có id ${arrId.join(",")} đã hết hàng!`,
         });
+      } else {
+        const newOrder = await Order.create({
+          orderItems,
+          shippingAddress: {
+            fullName,
+            address,
+            city,
+            phone,
+          },
+          paymentMethod,
+          deliveryMethod,
+          itemsPrice,
+          shippingPrice,
+          totalPrice,
+          user: userId,
+          isPaid,
+          paidAt,
+        });
+
+        if (newOrder) {
+          await EmailService.sendEmailCreateOrder(email, orderItems);
+          resolve({
+            status: "OK",
+            message: "SUCCESS",
+          });
+        }
       }
     } catch (e) {
       reject(e);
