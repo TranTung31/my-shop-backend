@@ -83,13 +83,13 @@ const updateUser = (id, data) => {
       if (checkUser === null) {
         resolve({
           status: "OK",
-          message: "The user is not defined",
+          message: "The user is not defined!",
         });
       }
       const updateUser = await User.findByIdAndUpdate(id, data, { new: true });
       resolve({
         status: "OK",
-        message: "SUCCESS",
+        message: "Update user success!",
         data: updateUser,
       });
     } catch (e) {
@@ -107,13 +107,13 @@ const deleteUser = (id) => {
       if (checkUser === null) {
         resolve({
           status: "OK",
-          message: "The user is not defined",
+          message: "The user is not defined!",
         });
       }
       await User.findByIdAndDelete(id);
       resolve({
         status: "OK",
-        message: "Delete user success",
+        message: "Delete user success!",
       });
     } catch (e) {
       reject(e);
@@ -127,7 +127,7 @@ const getAllUser = () => {
       const user = await User.find();
       resolve({
         status: "OK",
-        message: "Get all user success",
+        message: "Get all user success!",
         data: user,
       });
     } catch (e) {

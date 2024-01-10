@@ -51,7 +51,7 @@ const createOrder = (order) => {
         const arrId = [];
         newData.forEach((item) => {
           arrId.push(item.id);
-        })
+        });
         resolve({
           status: "ERROR",
           message: `Sản phẩm có id ${arrId.join(",")} đã hết hàng!`,
@@ -178,9 +178,65 @@ const deleteOrder = (orderId, orderItems) => {
   });
 };
 
+const getAll = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const allOrder = await Order.find();
+      resolve({
+        status: "OK",
+        message: "Get all order success!",
+        data: allOrder,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const updateOrder = (id, data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkOrder = await Order.findOne({ _id: id });
+      if (checkOrder === null) {
+        resolve({
+          status: "ERROR",
+          message: "The order is not defined!",
+        });
+      }
+      const updateOrder = await Order.findByIdAndUpdate(id, data, {
+        new: true,
+      });
+      resolve({
+        status: "OK",
+        message: "Update order success!",
+        data: updateOrder,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const deleteManyOrder = (ids) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await Order.deleteMany({ _id: ids });
+      resolve({
+        status: "OK",
+        message: "Delete many order success!",
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createOrder,
   getAllOrder,
   getOrderDetail,
   deleteOrder,
+  updateOrder,
+  getAll,
+  deleteManyOrder,
 };
