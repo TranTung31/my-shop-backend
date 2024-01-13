@@ -231,6 +231,21 @@ const deleteManyOrder = (ids) => {
   });
 };
 
+const getCountOrder = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await Order.countDocuments();
+      resolve({
+        status: "OK",
+        message: "Get count order success!",
+        data: result,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createOrder,
   getAllOrder,
@@ -239,4 +254,5 @@ module.exports = {
   updateOrder,
   getAll,
   deleteManyOrder,
+  getCountOrder,
 };

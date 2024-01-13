@@ -144,7 +144,7 @@ const getDetailUser = (id) => {
       });
       if (user === null) {
         resolve({
-          status: "OK",
+          status: "ERROR",
           message: "The user is not defined",
         });
       }
@@ -173,6 +173,21 @@ const deleteManyUser = (ids) => {
   });
 };
 
+const getCountUser = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await User.count();
+      resolve({
+        status: "OK",
+        message: "Get count user success!",
+        data: result,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -181,4 +196,5 @@ module.exports = {
   getAllUser,
   getDetailUser,
   deleteManyUser,
+  getCountUser,
 };

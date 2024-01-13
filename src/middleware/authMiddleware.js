@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -8,16 +8,16 @@ const authMiddleware = (req, res, next) => {
     if (err) {
       return res.status(404).json({
         status: "ERROR",
-        message: "The authemtication",
+        message: "The admin authentication check!",
       });
     }
     const { payload } = user;
-    if (user?.isAdmin || user) {
+    if (user?.isAdmin) {
       next();
     } else {
       return res.status(404).json({
         status: "ERROR",
-        message: "The authemtication",
+        message: "The admin authentication",
       });
     }
   });
@@ -30,16 +30,16 @@ const authUserMiddleware = (req, res, next) => {
     if (err) {
       return res.status(404).json({
         status: "ERROR",
-        message: "The authemtication",
+        message: "The all user authentication check!",
       });
     }
     const { payload } = user;
-    if (user?.isAdmin || user?.id === userId) {
+    if (user?.isAdmin || user) {
       next();
     } else {
       return res.status(404).json({
         status: "ERROR",
-        message: "The authemtication",
+        message: "The all user authentication",
       });
     }
   });

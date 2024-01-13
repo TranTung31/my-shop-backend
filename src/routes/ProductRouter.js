@@ -17,5 +17,6 @@ router.post(
   ProductController.deleteManyProduct
 );
 router.get("/get-all-type", ProductController.getAllType);
+router.get("/get-count-product", authMiddleware, ProductController.getCountProduct);
 
 module.exports = router;

@@ -1,23 +1,24 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/UserController");
+const UserController = require("../controllers/UserController");
 const {
   authMiddleware,
   authUserMiddleware,
 } = require("../middleware/authMiddleware");
 
-router.post("/sign-up", userController.createUser);
-router.post("/sign-in", userController.loginUser);
-router.post("/log-out", userController.logOutUser);
-router.put("/update-user/:id", authUserMiddleware, userController.updateUser);
-router.delete("/delete-user/:id", authMiddleware, userController.deleteUser);
-router.get("/getAllUser", authMiddleware, userController.getAllUser);
+router.post("/sign-up", UserController.createUser);
+router.post("/sign-in", UserController.loginUser);
+router.post("/log-out", UserController.logOutUser);
+router.put("/update-user/:id", authUserMiddleware, UserController.updateUser);
+router.delete("/delete-user/:id", authMiddleware, UserController.deleteUser);
+router.get("/getAllUser", authMiddleware, UserController.getAllUser);
 router.get(
   "/get-detail-user/:id",
   authUserMiddleware,
-  userController.getDetailUser
+  UserController.getDetailUser
 );
-router.post("/refresh-token", userController.refreshToken);
-router.post("/delete-many", authMiddleware, userController.deleteManyUser);
+router.post("/refresh-token", UserController.refreshToken);
+router.post("/delete-many", authMiddleware, UserController.deleteManyUser);
+router.get("/get-count-user", authMiddleware, UserController.getCountUser);
 
 module.exports = router;

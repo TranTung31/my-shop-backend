@@ -2,8 +2,19 @@ const Product = require("../models/ProductModel");
 
 const createProduct = (product) => {
   return new Promise(async (resolve, reject) => {
-    const { name, image, type, price, countInStock, rating, description, discount } =
-      product;
+    const {
+      name,
+      image,
+      type,
+      price,
+      countInStock,
+      rating,
+      description,
+      discount,
+      author,
+      numberOfBook,
+      formatBook,
+    } = product;
     try {
       const checkProduct = await Product.findOne({
         name: name,
@@ -23,6 +34,9 @@ const createProduct = (product) => {
           discount: discount,
           rating: rating,
           description: description,
+          author: author,
+          numberOfBook: numberOfBook,
+          formatBook: formatBook,
         });
         if (newProduct) {
           resolve({
@@ -163,16 +177,16 @@ const getAllProduct = (limit, page, sort, filter) => {
         });
       }
       const product = await Product.find()
-          .limit(limit)
-          .skip(page * limit);
-        resolve({
-          status: "OK",
-          message: "SUCCESS",
-          totalPage: Math.ceil(totalProduct / limit),
-          pageCurrent: page + 1,
-          totalProduct: totalProduct,
-          data: product,
-        });
+        .limit(limit)
+        .skip(page * limit);
+      resolve({
+        status: "OK",
+        message: "SUCCESS",
+        totalPage: Math.ceil(totalProduct / limit),
+        pageCurrent: page + 1,
+        totalProduct: totalProduct,
+        data: product,
+      });
     } catch (e) {
       reject(e);
     }
@@ -208,6 +222,21 @@ const getAllType = () => {
   });
 };
 
+const getCountProduct = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await Product.count();
+      resolve({
+        status: "OK",
+        message: "Get count product success!",
+        data: result,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createProduct,
   updateProduct,
@@ -216,4 +245,5 @@ module.exports = {
   getAllProduct,
   deleteManyProduct,
   getAllType,
+  getCountProduct,
 };

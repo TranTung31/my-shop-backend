@@ -10,6 +10,9 @@ const productSchema = new mongoose.Schema(
     description: { type: String },
     discount: { type: Number },
     selled: { type: Number },
+    author: { type: String },
+    numberOfBook: { type: Number },
+    formatBook: { type: String },
   },
   {
     timestamps: true,

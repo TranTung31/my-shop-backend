@@ -52,8 +52,8 @@ const loginUser = async (req, res) => {
     res.cookie("refresh_token", refresh_token, {
       httpOnly: true,
       secure: false,
-      samesite: 'strict'
-    })
+      samesite: "strict",
+    });
     return res.status(200).json(newRespone);
   } catch (e) {
     return res.status(404).json({
@@ -115,7 +115,7 @@ const getDetailUser = async (req, res) => {
     const userId = req.params.id;
     if (!userId) {
       return res.status(200).json({
-        status: "ERR",
+        status: "ERROR",
         message: "The user is required",
       });
     }
@@ -151,14 +151,14 @@ const logOutUser = async (req, res) => {
     // res.clearCookie("refresh_token");
     return res.status(200).json({
       status: "OK",
-      message: "Logout sucessfully"
-    })
+      message: "Logout sucessfully",
+    });
   } catch (e) {
     return res.status(404).json({
       message: e,
-    })
+    });
   }
-}
+};
 
 const deleteManyUser = async (req, res) => {
   try {
@@ -168,9 +168,20 @@ const deleteManyUser = async (req, res) => {
   } catch (e) {
     return res.status(404).json({
       message: e,
-    })
+    });
   }
-}
+};
+
+const getCountUser = async (req, res) => {
+  try {
+    const respone = await UserService.getCountUser();
+    return res.status(200).json(respone);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
 
 module.exports = {
   createUser,
@@ -182,4 +193,5 @@ module.exports = {
   getDetailUser,
   refreshToken,
   deleteManyUser,
+  getCountUser,
 };

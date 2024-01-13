@@ -137,6 +137,17 @@ const updateOrder = async (req, res) => {
   }
 };
 
+const getCountOrder = async (req, res) => {
+  try {
+    const respone = await OrderService.getCountOrder();
+    return res.status(200).json(respone);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
 module.exports = {
   updateOrder,
   createOrder,
@@ -145,4 +156,5 @@ module.exports = {
   deleteOrder,
   getAll,
   deleteManyOrder,
+  getCountOrder,
 };
