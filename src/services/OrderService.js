@@ -89,7 +89,7 @@ const createOrder = (order) => {
   });
 };
 
-const getAllOrder = (userId) => {
+const getOrder = (userId) => {
   return new Promise(async (resolve, reject) => {
     try {
       const checkUser = await Order.find({
@@ -178,7 +178,7 @@ const deleteOrder = (orderId, orderItems) => {
   });
 };
 
-const getAll = () => {
+const getAllOrder = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const allOrder = await Order.find();
@@ -246,13 +246,36 @@ const getCountOrder = () => {
   });
 };
 
+const getTotalPrice = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const allOrder = await Order.find();
+      const totalPrice = allOrder?.reduce((total, item) => {
+        return (total =
+          total +
+          (item.isPaid === true && item.isDelivered === true
+            ? item.totalPrice
+            : 0));
+      }, 0);
+      resolve({
+        status: "SUCCESS",
+        message: "Get total price success!",
+        data: totalPrice,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createOrder,
-  getAllOrder,
+  getOrder,
   getOrderDetail,
   deleteOrder,
   updateOrder,
-  getAll,
+  getAllOrder,
   deleteManyOrder,
   getCountOrder,
+  getTotalPrice,
 };

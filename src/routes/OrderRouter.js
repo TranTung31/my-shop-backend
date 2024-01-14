@@ -7,12 +7,13 @@ const {
 } = require("../middleware/authMiddleware");
 
 router.post("/create", authUserMiddleware, OrderController.createOrder);
-router.get("/get-all-order/:id", authUserMiddleware, OrderController.getAllOrder);
+router.get("/get-order/:id", authUserMiddleware, OrderController.getOrder);
 router.get("/get-order-detail/:id", authUserMiddleware, OrderController.getOrderDetail);
 router.delete("/delete-order/:id", authUserMiddleware, OrderController.deleteOrder);
-router.get("/get-all", authMiddleware, OrderController.getAll);
+router.get("/get-all-order", authMiddleware, OrderController.getAllOrder);
 router.post("/delete-many-order", authMiddleware, OrderController.deleteManyOrder);
 router.put("/update-order/:id", authMiddleware, OrderController.updateOrder);
 router.get("/get-count-order", authMiddleware, OrderController.getCountOrder);
+router.get("/get-total-price", authMiddleware, OrderController.getTotalPrice);
 
 module.exports = router;
