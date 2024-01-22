@@ -70,7 +70,7 @@ const updateUser = async (req, res) => {
     if (!userId) {
       return res.status(200).json({
         status: "ERR",
-        message: "The user is required",
+        message: "The user id is required!",
       });
     }
     const respone = await UserService.updateUser(userId, data);

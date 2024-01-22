@@ -9,18 +9,21 @@ const createUser = (newUser) => {
       const checkUser = await User.findOne({
         email: email,
       });
+
       if (checkUser !== null) {
         resolve({
           status: "ERR",
           message: "The email is already",
         });
       }
+
       const hash = bcrypt.hashSync(password, 10);
       const createdUser = await User.create({
         email,
         password: hash,
         confirmPassword: hash,
       });
+
       if (createdUser) {
         resolve({
           status: "OK",
@@ -80,16 +83,19 @@ const updateUser = (id, data) => {
       const checkUser = await User.findOne({
         _id: id,
       });
+
       if (checkUser === null) {
         resolve({
           status: "OK",
           message: "The user is not defined!",
         });
       }
+
       const updateUser = await User.findByIdAndUpdate(id, data, { new: true });
+
       resolve({
         status: "OK",
-        message: "Update user success!",
+        message: "Update the user success!",
         data: updateUser,
       });
     } catch (e) {
@@ -104,16 +110,19 @@ const deleteUser = (id) => {
       const checkUser = await User.findOne({
         _id: id,
       });
+
       if (checkUser === null) {
         resolve({
           status: "OK",
           message: "The user is not defined!",
         });
       }
+
       await User.findByIdAndDelete(id);
+
       resolve({
         status: "OK",
-        message: "Delete user success!",
+        message: "Delete the user success!",
       });
     } catch (e) {
       reject(e);
@@ -163,9 +172,10 @@ const deleteManyUser = (ids) => {
   return new Promise(async (resolve, reject) => {
     try {
       await User.deleteMany({ _id: ids });
+
       resolve({
         status: "OK",
-        message: "Delete many user success!",
+        message: "Delete many the user success!",
       });
     } catch (e) {
       reject(e);
@@ -177,6 +187,7 @@ const getCountUser = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const result = await User.count();
+      
       resolve({
         status: "OK",
         message: "Get count user success!",

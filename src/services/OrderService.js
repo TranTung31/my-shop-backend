@@ -1,4 +1,4 @@
-const Order = require("../models/OrderProduct");
+const Order = require("../models/OrderModal");
 const Product = require("../models/ProductModel");
 const EmailService = require("./EmailService");
 

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -13,6 +14,9 @@ const productSchema = new mongoose.Schema(
     author: { type: String },
     numberOfBook: { type: Number },
     formatBook: { type: String },
+    authorID: { type: mongoose.Schema.Types.ObjectId, ref: "Author" },
+    publisherID: { type: mongoose.Schema.Types.ObjectId, ref: "Publisher" },
+    genreID: { type: mongoose.Schema.Types.ObjectId, ref: "Genre" },
   },
   {
     timestamps: true,
