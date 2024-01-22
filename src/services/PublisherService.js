@@ -48,6 +48,33 @@ const getAllPublisher = () => {
   });
 };
 
+const getPublisher = (publisherId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkPublisher = await Publisher.findOne({
+        _id: publisherId,
+      });
+
+      if (checkPublisher === null) {
+        resolve({
+          status: "ERROR",
+          message: "The publisher is not defined!",
+        });
+      }
+
+      const publisher = await Publisher.findById(publisherId);
+
+      resolve({
+        status: "OK",
+        message: "Get detail publisher success!",
+        data: publisher,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 const updatePublisher = (publisherId, data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -126,4 +153,5 @@ module.exports = {
   updatePublisher,
   deletePublisher,
   deleteManyPublisher,
+  getPublisher,
 };

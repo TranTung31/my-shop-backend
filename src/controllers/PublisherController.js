@@ -29,6 +29,26 @@ const getAllPublisher = async (req, res) => {
   }
 };
 
+const getPublisher = async (req, res) => {
+  try {
+    const publisherId = req.params.id;
+
+    if (!publisherId) {
+      return res.status(404).json({
+        status: "ERROR",
+        message: "The publisher id is required!",
+      });
+    }
+
+    const respone = await PublisherService.getPublisher(publisherId);
+    return res.status(200).json(respone);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
 const updatePublisher = async (req, res) => {
   try {
     const publisherId = req.params.id;
@@ -88,4 +108,5 @@ module.exports = {
   updatePublisher,
   deletePublisher,
   deleteManyPublisher,
+  getPublisher,
 };

@@ -59,9 +59,9 @@ const getDetailProduct = async (req, res) => {
   try {
     const productId = req.params.id;
     if (!productId) {
-      return res.status(200).json({
+      return res.status(404).json({
         status: "ERROR",
-        message: "The productId is required",
+        message: "The product id is required!",
       });
     }
     const response = await ProductService.getDetailProduct(productId);

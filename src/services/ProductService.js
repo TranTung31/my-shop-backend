@@ -85,6 +85,7 @@ const getDetailProduct = (id) => {
       const checkProduct = await Product.findOne({
         _id: id,
       });
+      
       if (checkProduct === null) {
         resolve({
           status: "ERROR",
@@ -92,9 +93,10 @@ const getDetailProduct = (id) => {
         });
       } else {
         const product = await Product.findById(id);
+
         resolve({
           status: "OK",
-          message: "SUCCESS",
+          message: "Get detail product success!",
           data: product,
         });
       }

@@ -7,6 +7,7 @@ const {
 const PublisherController = require("../controllers/PublisherController");
 
 router.get("/get-all-publisher", authMiddleware, PublisherController.getAllPublisher);
+router.get("/get-publisher/:id", authMiddleware, PublisherController.getPublisher);
 router.post("/create-publisher", authMiddleware, PublisherController.createPublisher);
 router.put("/update-publisher/:id", authMiddleware, PublisherController.updatePublisher);
 router.delete("/delete-publisher/:id", authMiddleware, PublisherController.deletePublisher);
