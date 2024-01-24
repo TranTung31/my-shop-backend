@@ -14,15 +14,17 @@ const createProduct = (product) => {
       author,
       numberOfBook,
       formatBook,
+      publisherID,
     } = product;
     try {
       const checkProduct = await Product.findOne({
         name: name,
       });
+
       if (checkProduct !== null) {
         resolve({
           status: "ERROR",
-          message: "The name product is required",
+          message: "The name product is required!",
         });
       } else {
         const newProduct = await Product.create({
@@ -37,6 +39,7 @@ const createProduct = (product) => {
           author: author,
           numberOfBook: numberOfBook,
           formatBook: formatBook,
+          publisherID: publisherID,
         });
         if (newProduct) {
           resolve({
@@ -85,7 +88,7 @@ const getDetailProduct = (id) => {
       const checkProduct = await Product.findOne({
         _id: id,
       });
-      
+
       if (checkProduct === null) {
         resolve({
           status: "ERROR",
@@ -130,10 +133,27 @@ const deleteProduct = (id) => {
   });
 };
 
-const getAllProduct = (limit, page, sort, filter) => {
+const getAllProduct = (limit, page, sort, filter, publisher) => {
   return new Promise(async (resolve, reject) => {
     try {
       const totalProduct = await Product.count();
+      if (filter && publisher) {
+        const arrPublisher = publisher[1].split(",");
+        const allProductFilter = await Product.find({
+          [filter[0]]: { $regex: filter[1] },
+          [publisher[0]]: arrPublisher,
+        })
+          .limit(limit)
+          .skip(page * limit);
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          totalPage: Math.ceil(totalProduct / limit),
+          pageCurrent: page + 1,
+          totalProduct: totalProduct,
+          data: allProductFilter,
+        });
+      }
       if (filter) {
         const allProductFilter = await Product.find({
           [filter[0]]: { $regex: filter[1] },
