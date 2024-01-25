@@ -137,6 +137,43 @@ const getAllProduct = (limit, page, sort, filter, publisher) => {
   return new Promise(async (resolve, reject) => {
     try {
       const totalProduct = await Product.count();
+      if (filter && sort) {
+        // const objectSort = {};
+        // objectSort[sort[1]] = sort[0];
+        if (publisher) {
+          const arrPublisher = publisher[1].split(",");
+          const allProductFilter = await Product.find({
+            [filter[0]]: { $regex: filter[1] },
+            [publisher[0]]: arrPublisher,
+          })
+            .limit(limit)
+            .skip(page * limit)
+            .sort({ price: sort });
+          resolve({
+            status: "OK",
+            message: "SUCCESS",
+            totalPage: Math.ceil(totalProduct / limit),
+            pageCurrent: page + 1,
+            totalProduct: totalProduct,
+            data: allProductFilter,
+          });
+        } else {
+          const allProductSort = await Product.find({
+            [filter[0]]: { $regex: filter[1] },
+          })
+            .limit(limit)
+            .skip(page * limit)
+            .sort({ price: sort });
+          resolve({
+            status: "OK",
+            message: "SUCCESS",
+            totalPage: Math.ceil(totalProduct / limit),
+            pageCurrent: page + 1,
+            totalProduct: totalProduct,
+            data: allProductSort,
+          });
+        }
+      }
       if (filter && publisher) {
         const arrPublisher = publisher[1].split(",");
         const allProductFilter = await Product.find({
@@ -169,22 +206,7 @@ const getAllProduct = (limit, page, sort, filter, publisher) => {
           data: allProductFilter,
         });
       }
-      if (sort) {
-        const objectSort = {};
-        objectSort[sort[1]] = sort[0];
-        const allProductSort = await Product.find()
-          .limit(limit)
-          .skip(page * limit)
-          .sort(objectSort);
-        resolve({
-          status: "OK",
-          message: "SUCCESS",
-          totalPage: Math.ceil(totalProduct / limit),
-          pageCurrent: page + 1,
-          totalProduct: totalProduct,
-          data: allProductSort,
-        });
-      }
+
       if (limit) {
         const product = await Product.find()
           .limit(limit)
@@ -198,6 +220,7 @@ const getAllProduct = (limit, page, sort, filter, publisher) => {
           data: product,
         });
       }
+
       const product = await Product.find()
         .limit(limit)
         .skip(page * limit);
