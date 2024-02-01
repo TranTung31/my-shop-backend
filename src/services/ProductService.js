@@ -15,6 +15,7 @@ const createProduct = (product) => {
       numberOfBook,
       formatBook,
       publisherID,
+      genreID,
     } = product;
     try {
       const checkProduct = await Product.findOne({
@@ -40,6 +41,7 @@ const createProduct = (product) => {
           numberOfBook: numberOfBook,
           formatBook: formatBook,
           publisherID: publisherID,
+          genreID: genreID,
         });
         if (newProduct) {
           resolve({
