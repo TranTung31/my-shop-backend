@@ -40,6 +40,7 @@ const createProduct = (product) => {
           author: author,
           numberOfBook: numberOfBook,
           formatBook: formatBook,
+          description: description,
           publisherID: publisherID,
           genreID: genreID,
         });
@@ -145,7 +146,7 @@ const getAllProduct = (limit, page, sort, filter, publisher) => {
         if (publisher) {
           const arrPublisher = publisher[1].split(",");
           const allProductFilter = await Product.find({
-            [filter[0]]: { $regex: filter[1] },
+            [filter[0]]: filter[1],
             [publisher[0]]: arrPublisher,
           })
             .limit(limit)
@@ -161,7 +162,7 @@ const getAllProduct = (limit, page, sort, filter, publisher) => {
           });
         } else {
           const allProductSort = await Product.find({
-            [filter[0]]: { $regex: filter[1] },
+            [filter[0]]: filter[1],
           })
             .limit(limit)
             .skip(page * limit)
@@ -179,7 +180,7 @@ const getAllProduct = (limit, page, sort, filter, publisher) => {
       if (filter && publisher) {
         const arrPublisher = publisher[1].split(",");
         const allProductFilter = await Product.find({
-          [filter[0]]: { $regex: filter[1] },
+          [filter[0]]: filter[1],
           [publisher[0]]: arrPublisher,
         })
           .limit(limit)
@@ -195,7 +196,7 @@ const getAllProduct = (limit, page, sort, filter, publisher) => {
       }
       if (filter) {
         const allProductFilter = await Product.find({
-          [filter[0]]: { $regex: filter[1] },
+          [filter[0]]: filter[1],
         })
           .limit(limit)
           .skip(page * limit);
