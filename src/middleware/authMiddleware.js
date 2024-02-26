@@ -1,4 +1,4 @@
- const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -47,5 +47,5 @@ const authUserMiddleware = (req, res, next) => {
 
 module.exports = {
   authMiddleware,
-  authUserMiddleware
+  authUserMiddleware,
 };
