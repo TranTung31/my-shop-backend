@@ -137,6 +137,30 @@ const deleteManyContact = (contactIds) => {
   });
 };
 
+const getContactUser = (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const dataCheckUser = await Contact.find({
+        userId: userId,
+      });
+      if (dataCheckUser === null) {
+        resolve({
+          status: "ERROR",
+          message: "The user id is not definded!",
+        });
+      } else {
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          data: dataCheckUser,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createContact,
   getAllContact,
@@ -144,4 +168,5 @@ module.exports = {
   updateContact,
   deleteContact,
   deleteManyContact,
+  getContactUser,
 };
