@@ -91,12 +91,12 @@ const updateUser = (id, data) => {
         });
       }
 
-      const updateUser = await User.findByIdAndUpdate(id, data, { new: true });
+      const dataUpdateUser = await User.findByIdAndUpdate(id, data, { new: true });
 
       resolve({
         status: "OK",
         message: "Update the user success!",
-        data: updateUser,
+        data: dataUpdateUser,
       });
     } catch (e) {
       reject(e);

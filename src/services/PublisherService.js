@@ -89,7 +89,7 @@ const updatePublisher = (publisherId, data) => {
         });
       }
 
-      const updatePublisher = await Publisher.findByIdAndUpdate(
+      const dataUpdatePublisher = await Publisher.findByIdAndUpdate(
         publisherId,
         data,
         { new: true }
@@ -98,7 +98,7 @@ const updatePublisher = (publisherId, data) => {
       resolve({
         status: "OK",
         message: "Update the publisher success!",
-        data: updatePublisher,
+        data: dataUpdatePublisher,
       });
     } catch (e) {
       reject(e);

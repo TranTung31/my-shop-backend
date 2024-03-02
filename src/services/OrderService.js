@@ -203,13 +203,13 @@ const updateOrder = (id, data) => {
           message: "The order is not defined!",
         });
       }
-      const updateOrder = await Order.findByIdAndUpdate(id, data, {
+      const dataUpdateOrder = await Order.findByIdAndUpdate(id, data, {
         new: true,
       });
       resolve({
         status: "OK",
         message: "Update order success!",
-        data: updateOrder,
+        data: dataUpdateOrder,
       });
     } catch (e) {
       reject(e);

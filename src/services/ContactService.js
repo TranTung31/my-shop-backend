@@ -81,14 +81,14 @@ const updateContact = (contactId, data) => {
         });
       }
 
-      const updateContact = await Contact.findByIdAndUpdate(contactId, data, {
+      const dataUpdateContact = await Contact.findByIdAndUpdate(contactId, data, {
         new: true,
       });
 
       resolve({
         status: "OK",
         message: "Update the contact success!",
-        data: updateContact,
+        data: dataUpdateContact,
       });
     } catch (e) {
       reject(e);
