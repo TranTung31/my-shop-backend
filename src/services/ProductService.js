@@ -16,8 +16,10 @@ const createProduct = (product) => {
       formatBook,
       publisherID,
       genreID,
+      authorID
     } = product;
     try {
+
       const checkProduct = await Product.findOne({
         name: name,
       });
@@ -43,7 +45,9 @@ const createProduct = (product) => {
           description: description,
           publisherID: publisherID,
           genreID: genreID,
+          authorID: authorID,
         });
+        
         if (newProduct) {
           resolve({
             status: "OK",
