@@ -126,6 +126,25 @@ const getCountProduct = async (req, res) => {
   }
 };
 
+const getProductAuthor = async (req, res) => {
+  try {
+    const { limit, page, sort, filter, publisher } = req.query;
+
+    const respone = await ProductService.getProductAuthor(
+      Number(limit),
+      Number(page) || 0,
+      sort,
+      filter,
+      publisher
+    );
+    return res.status(200).json(respone);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   updateProduct,
@@ -135,4 +154,5 @@ module.exports = {
   deleteManyProduct,
   getAllType,
   getCountProduct,
+  getProductAuthor,
 };
