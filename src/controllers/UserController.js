@@ -8,17 +8,17 @@ const createUser = async (req, res) => {
     const isCheckEmail = regex.test(email);
     if (!email || !password || !confirmPassword) {
       return res.status(200).json({
-        status: "ERR",
+        status: "ERROR",
         message: "The input is required",
       });
     } else if (!isCheckEmail) {
       return res.status(200).json({
-        status: "ERR",
+        status: "ERROR",
         message: "The input must is email",
       });
     } else if (password !== confirmPassword) {
       return res.status(200).json({
-        status: "ERR",
+        status: "ERROR",
         message: "The password is equal confirmPassword",
       });
     }

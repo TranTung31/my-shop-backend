@@ -12,7 +12,7 @@ const createUser = (newUser) => {
 
       if (checkUser !== null) {
         resolve({
-          status: "ERR",
+          status: "ERROR",
           message: "The email is already",
         });
       }
