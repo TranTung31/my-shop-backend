@@ -139,15 +139,45 @@ const deleteProduct = (id) => {
   });
 };
 
-const getAllProduct = (limit, page, sort, filter, publisher) => {
+const getAllProduct = (limit, page, sort, filter, publisher, rating) => {
   return new Promise(async (resolve, reject) => {
     try {
       const totalProduct = await Product.count();
+      const arrPublisher = publisher[1].split(",");
+
+      // Trường hợp có filter và sort
       if (filter && sort) {
         // const objectSort = {};
         // objectSort[sort[1]] = sort[0];
+        // Trường hợp có filter, sort và publisher
         if (publisher) {
-          const arrPublisher = publisher[1].split(",");
+          // Trường hợp có filter, sort, publisher và rating
+          if (rating) {
+            let ratingQuery = {};
+            if (rating === 3) {
+              ratingQuery = { rating: { $gte: 3 } };
+            } else if (rating === 4) {
+              ratingQuery = { rating: { $gte: 4 } };
+            } else if (rating === 5) {
+              ratingQuery = { rating: 5 };
+            }
+            const allProductRating = await Product.find({
+              ...ratingQuery,
+              [filter[0]]: filter[1],
+              [publisher[0]]: arrPublisher,
+            })
+              .limit(limit)
+              .skip(page * limit)
+              .sort({ price: sort });
+            resolve({
+              status: "OK",
+              message: "SUCCESS",
+              totalPage: Math.ceil(totalProduct / limit),
+              pageCurrent: page + 1,
+              totalProduct: totalProduct,
+              data: allProductRating,
+            });
+          }
           const allProductFilter = await Product.find({
             [filter[0]]: filter[1],
             [publisher[0]]: arrPublisher,
@@ -163,40 +193,68 @@ const getAllProduct = (limit, page, sort, filter, publisher) => {
             totalProduct: totalProduct,
             data: allProductFilter,
           });
-        } else {
-          const allProductSort = await Product.find({
-            [filter[0]]: filter[1],
-          })
-            .limit(limit)
-            .skip(page * limit)
-            .sort({ price: sort });
-          resolve({
-            status: "OK",
-            message: "SUCCESS",
-            totalPage: Math.ceil(totalProduct / limit),
-            pageCurrent: page + 1,
-            totalProduct: totalProduct,
-            data: allProductSort,
-          });
         }
-      }
-      if (filter && publisher) {
-        const arrPublisher = publisher[1].split(",");
-        const allProductFilter = await Product.find({
+
+        const allProductSort = await Product.find({
           [filter[0]]: filter[1],
-          [publisher[0]]: arrPublisher,
         })
           .limit(limit)
-          .skip(page * limit);
+          .skip(page * limit)
+          .sort({ price: sort });
         resolve({
           status: "OK",
           message: "SUCCESS",
           totalPage: Math.ceil(totalProduct / limit),
           pageCurrent: page + 1,
           totalProduct: totalProduct,
-          data: allProductFilter,
+          data: allProductSort,
         });
       }
+
+      // Trường hợp có filter và publisher
+      if (filter && publisher) {
+        if (rating) {
+          let ratingQuery = {};
+          if (rating === 3) {
+            ratingQuery = { rating: { $gte: 3 } };
+          } else if (rating === 4) {
+            ratingQuery = { rating: { $gte: 4 } };
+          } else if (rating === 5) {
+            ratingQuery = { rating: 5 };
+          }
+          const allProductRating = await Product.find({
+            ...ratingQuery,
+            [filter[0]]: filter[1],
+            [publisher[0]]: arrPublisher,
+          })
+            .limit(limit)
+            .skip(page * limit);
+          resolve({
+            status: "OK",
+            message: "SUCCESS",
+            totalPage: Math.ceil(totalProduct / limit),
+            pageCurrent: page + 1,
+            totalProduct: totalProduct,
+            data: allProductRating,
+          });
+        } else {
+          const allProductFilter = await Product.find({
+            [filter[0]]: filter[1],
+            [publisher[0]]: arrPublisher,
+          })
+            .limit(limit)
+            .skip(page * limit);
+          resolve({
+            status: "OK",
+            message: "SUCCESS",
+            totalPage: Math.ceil(totalProduct / limit),
+            pageCurrent: page + 1,
+            totalProduct: totalProduct,
+            data: allProductFilter,
+          });
+        }
+      }
+
       if (filter) {
         const allProductFilter = await Product.find({
           [filter[0]]: filter[1],
