@@ -142,8 +142,12 @@ const deleteProduct = (id) => {
 const getAllProduct = (limit, page, sort, filter, publisher, rating) => {
   return new Promise(async (resolve, reject) => {
     try {
+      let arrPublisher;
       const totalProduct = await Product.count();
-      const arrPublisher = publisher[1].split(",");
+
+      if (publisher) {
+        arrPublisher = publisher[1].split(",");
+      }
 
       // Trường hợp có filter và sort
       if (filter && sort) {

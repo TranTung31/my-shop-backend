@@ -9,13 +9,13 @@ const {
 router.post("/create", ProductController.createProduct);
 router.put("/update/:id", authMiddleware, ProductController.updateProduct);
 router.delete("/delete/:id", authMiddleware, ProductController.deleteProduct);
-router.get("/get-all", ProductController.getAllProduct);
-router.get("/get-detail/:id", ProductController.getDetailProduct);
 router.post(
   "/delete-many",
   authMiddleware,
   ProductController.deleteManyProduct
 );
+router.get("/get-all", ProductController.getAllProduct);
+router.get("/get-detail/:id", ProductController.getDetailProduct);
 router.get("/get-all-type", ProductController.getAllType);
 router.get(
   "/get-count-product",
