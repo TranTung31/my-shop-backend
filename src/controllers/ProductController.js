@@ -129,14 +129,15 @@ const getCountProduct = async (req, res) => {
 
 const getProductAuthor = async (req, res) => {
   try {
-    const { limit, page, sort, filter, publisher } = req.query;
+    const { limit, page, sort, filter, publisher, rating } = req.query;
 
     const respone = await ProductService.getProductAuthor(
       Number(limit),
       Number(page) || 0,
       sort,
       filter,
-      publisher
+      publisher,
+      Number(rating)
     );
     return res.status(200).json(respone);
   } catch (e) {
