@@ -3,17 +3,16 @@ const OrderService = require("../services/OrderService");
 const createOrder = async (req, res) => {
   try {
     const {
-      orderItems,
       fullName,
       address,
       city,
       phone,
       paymentMethod,
       itemsPrice,
-      shippingPrice,
       totalPrice,
       userId,
     } = req.body;
+
     if (
       !fullName ||
       !address ||
@@ -42,13 +41,16 @@ const createOrder = async (req, res) => {
 const getOrder = async (req, res) => {
   try {
     const userId = req.params.id;
+    const statusDelivery = req.query.delivery;
+
     if (!userId) {
       return res.status(404).json({
         status: "ERROR",
         message: "The user id is required!",
       });
     }
-    const response = await OrderService.getOrder(userId);
+
+    const response = await OrderService.getOrder(userId, statusDelivery);
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({

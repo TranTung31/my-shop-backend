@@ -21,6 +21,7 @@ const createOrder = (order) => {
         paidAt,
         email,
       } = order;
+
       const result = orderItems.map(async (order) => {
         const productData = await Product.findOneAndUpdate(
           {
@@ -89,13 +90,39 @@ const createOrder = (order) => {
   });
 };
 
-const getOrder = (userId) => {
+const getOrder = (userId, statusDelivery) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const checkUser = await Order.find({
-        user: userId,
-      });
-      if (checkUser === null) {
+      let result = null;
+
+      if (statusDelivery === "all") {
+        result = await Order.find({
+          user: userId,
+        });
+      }
+
+      if (statusDelivery === "wait") {
+        result = await Order.find({
+          user: userId,
+          isDelivered: "Chờ giao hàng",
+        });
+      }
+
+      if (statusDelivery === "delivering") {
+        result = await Order.find({
+          user: userId,
+          isDelivered: "Đang giao hàng",
+        });
+      }
+
+      if (statusDelivery === "delivered") {
+        result = await Order.find({
+          user: userId,
+          isDelivered: "Đã giao hàng",
+        });
+      }
+
+      if (result === null) {
         resolve({
           status: "ERROR",
           message: "The user id is not definded!",
@@ -103,8 +130,8 @@ const getOrder = (userId) => {
       } else {
         resolve({
           status: "OK",
-          message: "SUCCESS",
-          data: checkUser,
+          message: "Get orders success!",
+          data: result,
         });
       }
     } catch (e) {
@@ -253,7 +280,7 @@ const getTotalPrice = () => {
       const totalPrice = allOrder?.reduce((total, item) => {
         return (total =
           total +
-          (item.isPaid === true && item.isDelivered === true
+          (item.isPaid === true && item.isDelivered === "Đã giao hàng"
             ? item.totalPrice
             : 0));
       }, 0);

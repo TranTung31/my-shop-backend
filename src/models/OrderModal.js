@@ -29,7 +29,7 @@ const orderSchema = new mongoose.Schema(
     totalPrice: { type: Number, required: true },
     isPaid: { type: Boolean, default: false },
     paidAt: { type: Date },
-    isDelivered: { type: Boolean, default: false },
+    isDelivered: { type: String, default: "Chờ giao hàng" },
     delivered: { type: Date },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
