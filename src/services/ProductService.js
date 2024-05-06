@@ -515,6 +515,24 @@ const getProductAuthor = (limit, page, sort, filter, publisher, rating) => {
   });
 };
 
+const searchProduct = (q) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const dataProduct = await Product.find({
+        name: { $regex: new RegExp(q, 'i') }
+      });
+
+      resolve({
+        status: "OK",
+        message: "Gel all product success!",
+        data: dataProduct,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createProduct,
   updateProduct,
@@ -525,4 +543,5 @@ module.exports = {
   getAllType,
   getCountProduct,
   getProductAuthor,
+  searchProduct,
 };

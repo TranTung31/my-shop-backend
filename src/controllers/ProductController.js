@@ -131,7 +131,7 @@ const getProductAuthor = async (req, res) => {
   try {
     const { limit, page, sort, filter, publisher, rating } = req.query;
 
-    const respone = await ProductService.getProductAuthor(
+    const response = await ProductService.getProductAuthor(
       Number(limit),
       Number(page) || 0,
       sort,
@@ -139,7 +139,19 @@ const getProductAuthor = async (req, res) => {
       publisher,
       Number(rating)
     );
-    return res.status(200).json(respone);
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
+const searchProduct = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const response = await ProductService.searchProduct(q);
+    return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
       message: e,
@@ -157,4 +169,5 @@ module.exports = {
   getAllType,
   getCountProduct,
   getProductAuthor,
+  searchProduct,
 };

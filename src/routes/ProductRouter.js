@@ -23,5 +23,6 @@ router.get(
   ProductController.getCountProduct
 );
 router.get("/get-product-author", ProductController.getProductAuthor);
+router.get("/search", ProductController.searchProduct);
 
 module.exports = router;
