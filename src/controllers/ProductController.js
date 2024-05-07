@@ -79,7 +79,7 @@ const getAllProduct = async (req, res) => {
     const { limit, page, sort, filter, publisher, rating } = req.query;
     const response = await ProductService.getAllProduct(
       Number(limit),
-      Number(page) || 0,
+      Number(page) || 1,
       sort,
       filter,
       publisher,

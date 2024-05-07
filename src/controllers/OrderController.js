@@ -41,7 +41,7 @@ const createOrder = async (req, res) => {
 const getOrder = async (req, res) => {
   try {
     const userId = req.params.id;
-    const statusDelivery = req.query.delivery;
+    const { delivery: statusDelivery, page: pageString } = req.query;
 
     if (!userId) {
       return res.status(404).json({
@@ -50,7 +50,11 @@ const getOrder = async (req, res) => {
       });
     }
 
-    const response = await OrderService.getOrder(userId, statusDelivery);
+    const response = await OrderService.getOrder(
+      userId,
+      statusDelivery,
+      pageString
+    );
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({

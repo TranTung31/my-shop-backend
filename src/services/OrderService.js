@@ -90,36 +90,66 @@ const createOrder = (order) => {
   });
 };
 
-const getOrder = (userId, statusDelivery) => {
+const getOrder = (userId, statusDelivery, pageString) => {
   return new Promise(async (resolve, reject) => {
     try {
       let result = null;
+      let totalOrder = null;
+      const PAGE_SIZE = 5;
+      let page = Number(pageString);
 
-      if (statusDelivery === "all") {
-        result = await Order.find({
-          user: userId,
-        });
-      }
+      if (page <= 0) page = 1;
 
-      if (statusDelivery === "wait") {
-        result = await Order.find({
-          user: userId,
-          isDelivered: "Chờ giao hàng",
-        });
-      }
+      if (page) {
+        if (statusDelivery === "all") {
+          result = await Order.find({
+            user: userId,
+          })
+            .skip((page - 1) * PAGE_SIZE)
+            .limit(PAGE_SIZE);
+          totalOrder = await Order.count({
+            user: userId,
+          });
+        }
 
-      if (statusDelivery === "delivering") {
-        result = await Order.find({
-          user: userId,
-          isDelivered: "Đang giao hàng",
-        });
-      }
+        if (statusDelivery === "wait") {
+          result = await Order.find({
+            user: userId,
+            isDelivered: "Chờ giao hàng",
+          })
+            .skip((page - 1) * PAGE_SIZE)
+            .limit(PAGE_SIZE);
+          totalOrder = await Order.count({
+            user: userId,
+            isDelivered: "Chờ giao hàng",
+          });
+        }
 
-      if (statusDelivery === "delivered") {
-        result = await Order.find({
-          user: userId,
-          isDelivered: "Đã giao hàng",
-        });
+        if (statusDelivery === "delivering") {
+          result = await Order.find({
+            user: userId,
+            isDelivered: "Đang giao hàng",
+          })
+            .skip((page - 1) * PAGE_SIZE)
+            .limit(PAGE_SIZE);
+          totalOrder = await Order.count({
+            user: userId,
+            isDelivered: "Đang giao hàng",
+          });
+        }
+
+        if (statusDelivery === "delivered") {
+          result = await Order.find({
+            user: userId,
+            isDelivered: "Đã giao hàng",
+          })
+            .skip((page - 1) * PAGE_SIZE)
+            .limit(PAGE_SIZE);
+          totalOrder = await Order.count({
+            user: userId,
+            isDelivered: "Đã giao hàng",
+          });
+        }
       }
 
       if (result === null) {
@@ -131,6 +161,7 @@ const getOrder = (userId, statusDelivery) => {
         resolve({
           status: "OK",
           message: "Get orders success!",
+          totalOrder,
           data: result,
         });
       }
