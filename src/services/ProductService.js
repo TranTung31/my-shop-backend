@@ -532,8 +532,30 @@ const searchProduct = (q) => {
 
       resolve({
         status: "OK",
-        message: "Gel all product success!",
+        message: "Gel all products successfully!",
         data: dataProduct,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const getProduct = (page, limit) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await Product.find()
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+      const totalProduct = await Product.count();
+
+      resolve({
+        status: "OK",
+        message: "Get products successfully!",
+        data: result,
+        totalProduct,
       });
     } catch (e) {
       reject(e);
@@ -552,4 +574,5 @@ module.exports = {
   getCountProduct,
   getProductAuthor,
   searchProduct,
+  getProduct,
 };

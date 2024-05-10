@@ -38,7 +38,7 @@ const createOrder = async (req, res) => {
   }
 };
 
-const getOrder = async (req, res) => {
+const getOrderById = async (req, res) => {
   try {
     const userId = req.params.id;
     const { delivery: statusDelivery, page: pageString } = req.query;
@@ -50,7 +50,7 @@ const getOrder = async (req, res) => {
       });
     }
 
-    const response = await OrderService.getOrder(
+    const response = await OrderService.getOrderById(
       userId,
       statusDelivery,
       pageString
@@ -165,14 +165,30 @@ const getTotalPrice = async (req, res) => {
   }
 };
 
+const getOrder = async (req, res) => {
+  try {
+    const { page, limit } = req.query;
+    const response = await OrderService.getOrder(
+      Number(page) || 1,
+      Number(limit) || 10
+    );
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
 module.exports = {
   updateOrder,
   createOrder,
-  getOrder,
+  getOrderById,
   getOrderDetail,
   deleteOrder,
   getAllOrder,
   deleteManyOrder,
   getCountOrder,
   getTotalPrice,
+  getOrder,
 };

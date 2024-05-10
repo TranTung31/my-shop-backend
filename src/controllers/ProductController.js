@@ -159,6 +159,21 @@ const searchProduct = async (req, res) => {
   }
 };
 
+const getProduct = async (req, res) => {
+  try {
+    const { page, limit } = req.query;
+    const response = await ProductService.getProduct(
+      Number(page) || 1,
+      Number(limit) || 10
+    );
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   updateProduct,
@@ -170,4 +185,5 @@ module.exports = {
   getCountProduct,
   getProductAuthor,
   searchProduct,
+  getProduct,
 };
