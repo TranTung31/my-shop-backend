@@ -90,7 +90,7 @@ const createOrder = (order) => {
   });
 };
 
-const getOrder = (userId, statusDelivery, pageString) => {
+const getOrderById = (userId, statusDelivery, pageString) => {
   return new Promise(async (resolve, reject) => {
     try {
       let result = null;
@@ -326,9 +326,31 @@ const getTotalPrice = () => {
   });
 };
 
+const getOrder = (page, limit) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await Order.find()
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+      const totalOrder = await Order.count();
+
+      resolve({
+        status: "OK",
+        message: "Get orders successfully!",
+        data: result,
+        totalOrder,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
 module.exports = {
   createOrder,
-  getOrder,
+  getOrderById,
   getOrderDetail,
   deleteOrder,
   updateOrder,
@@ -336,4 +358,5 @@ module.exports = {
   deleteManyOrder,
   getCountOrder,
   getTotalPrice,
+  getOrder
 };
