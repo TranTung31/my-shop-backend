@@ -47,7 +47,7 @@ const getAllGenre = () => {
   });
 };
 
-const getGenre = (genreId) => {
+const getGenreById = (genreId) => {
   return new Promise(async (resolve, reject) => {
     try {
       const checkGenre = await Genre.findOne({
@@ -67,6 +67,28 @@ const getGenre = (genreId) => {
         status: "OK",
         message: "Get detail genre success!",
         data: genre,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const getGenre = (page, limit) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await Genre.find()
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+      const totalGenre = await Genre.count();
+
+      resolve({
+        status: "OK",
+        message: "Get genres successfully!",
+        data: result,
+        totalGenre,
       });
     } catch (e) {
       reject(e);
@@ -146,8 +168,9 @@ const deleteManyGenre = (genreIds) => {
 
 module.exports = {
   createGenre,
-  getAllGenre,
   getGenre,
+  getAllGenre,
+  getGenreById,
   updateGenre,
   deleteGenre,
   deleteManyGenre,

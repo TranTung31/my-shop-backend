@@ -6,11 +6,32 @@ const {
 } = require("../middleware/authMiddleware");
 const PublisherController = require("../controllers/PublisherController");
 
+router.route("").get(PublisherController.getPublisher);
 router.get("/get-all-publisher", PublisherController.getAllPublisher);
-router.get("/get-publisher/:id", authMiddleware, PublisherController.getPublisher);
-router.post("/create-publisher", authMiddleware, PublisherController.createPublisher);
-router.put("/update-publisher/:id", authMiddleware, PublisherController.updatePublisher);
-router.delete("/delete-publisher/:id", authMiddleware, PublisherController.deletePublisher);
-router.post("/delete-many-publisher", authMiddleware, PublisherController.deleteManyPublisher);
+router.get(
+  "/get-publisher/:id",
+  authMiddleware,
+  PublisherController.getPublisherById
+);
+router.post(
+  "/create-publisher",
+  authMiddleware,
+  PublisherController.createPublisher
+);
+router.put(
+  "/update-publisher/:id",
+  authMiddleware,
+  PublisherController.updatePublisher
+);
+router.delete(
+  "/delete-publisher/:id",
+  authMiddleware,
+  PublisherController.deletePublisher
+);
+router.post(
+  "/delete-many-publisher",
+  authMiddleware,
+  PublisherController.deleteManyPublisher
+);
 
 module.exports = router;

@@ -29,7 +29,7 @@ const getAllAuthor = async (req, res) => {
   }
 };
 
-const getAuthor = async (req, res) => {
+const getAuthorById = async (req, res) => {
   try {
     const authorId = req.params.id;
 
@@ -40,7 +40,7 @@ const getAuthor = async (req, res) => {
       });
     }
 
-    const respone = await AuthorService.getAuthor(authorId);
+    const respone = await AuthorService.getAuthorById(authorId);
     return res.status(200).json(respone);
   } catch (e) {
     return res.status(404).json({
@@ -102,10 +102,26 @@ const deleteManyAuthor = async (req, res) => {
   }
 };
 
+const getAuthor = async (req, res) => {
+  try {
+    const { page, limit } = req.query;
+    const response = await AuthorService.getAuthor(
+      Number(page) || 1,
+      Number(limit) || 10
+    );
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
 module.exports = {
+  getAuthor,
   createAuthor,
   getAllAuthor,
-  getAuthor,
+  getAuthorById,
   updateAuthor,
   deleteAuthor,
   deleteManyAuthor,

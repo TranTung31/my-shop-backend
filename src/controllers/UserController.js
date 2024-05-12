@@ -183,6 +183,21 @@ const getCountUser = async (req, res) => {
   }
 };
 
+const getUser = async (req, res) => {
+  try {
+    const { page, limit } = req.query;
+    const response = await UserService.getUser(
+      Number(page) || 1,
+      Number(limit) || 10
+    );
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -193,5 +208,6 @@ module.exports = {
   getDetailUser,
   refreshToken,
   deleteManyUser,
+  getUser,
   getCountUser,
 };

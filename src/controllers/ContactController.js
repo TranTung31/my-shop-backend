@@ -29,7 +29,7 @@ const getAllContact = async (req, res) => {
   }
 };
 
-const getContact = async (req, res) => {
+const getContactById = async (req, res) => {
   try {
     const contactId = req.params.id;
 
@@ -40,8 +40,23 @@ const getContact = async (req, res) => {
       });
     }
 
-    const respone = await ContactService.getContact(contactId);
+    const respone = await ContactService.getContactById(contactId);
     return res.status(200).json(respone);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
+const getContact = async (req, res) => {
+  try {
+    const { page, limit } = req.query;
+    const response = await ContactService.getContact(
+      Number(page) || 1,
+      Number(limit) || 10
+    );
+    return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
       message: e,
@@ -124,8 +139,9 @@ module.exports = {
   createContact,
   getAllContact,
   getContact,
+  getContactById,
   updateContact,
   deleteContact,
   deleteManyContact,
-  getContactUser
+  getContactUser,
 };
