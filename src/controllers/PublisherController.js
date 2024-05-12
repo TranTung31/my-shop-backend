@@ -29,7 +29,7 @@ const getAllPublisher = async (req, res) => {
   }
 };
 
-const getPublisher = async (req, res) => {
+const getPublisherById = async (req, res) => {
   try {
     const publisherId = req.params.id;
 
@@ -40,8 +40,23 @@ const getPublisher = async (req, res) => {
       });
     }
 
-    const respone = await PublisherService.getPublisher(publisherId);
+    const respone = await PublisherService.getPublisherById(publisherId);
     return res.status(200).json(respone);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
+const getPublisher = async (req, res) => {
+  try {
+    const { page, limit } = req.query;
+    const response = await PublisherService.getPublisher(
+      Number(page) || 1,
+      Number(limit) || 10
+    );
+    return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
       message: e,
@@ -109,4 +124,5 @@ module.exports = {
   deletePublisher,
   deleteManyPublisher,
   getPublisher,
+  getPublisherById,
 };

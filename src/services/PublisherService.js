@@ -48,7 +48,7 @@ const getAllPublisher = () => {
   });
 };
 
-const getPublisher = (publisherId) => {
+const getPublisherById = (publisherId) => {
   return new Promise(async (resolve, reject) => {
     try {
       const checkPublisher = await Publisher.findOne({
@@ -68,6 +68,28 @@ const getPublisher = (publisherId) => {
         status: "OK",
         message: "Get detail publisher success!",
         data: publisher,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const getPublisher = (page, limit) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await Publisher.find()
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+      const totalPublisher = await Publisher.count();
+
+      resolve({
+        status: "OK",
+        message: "Get publishers successfully!",
+        data: result,
+        totalPublisher,
       });
     } catch (e) {
       reject(e);
@@ -154,4 +176,5 @@ module.exports = {
   deletePublisher,
   deleteManyPublisher,
   getPublisher,
+  getPublisherById,
 };

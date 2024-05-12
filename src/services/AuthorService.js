@@ -48,7 +48,7 @@ const getAllAuthor = () => {
   });
 };
 
-const getAuthor = (authorId) => {
+const getAuthorById = (authorId) => {
   return new Promise(async (resolve, reject) => {
     try {
       const checkAuthor = await Author.findOne({
@@ -147,10 +147,33 @@ const deleteManyAuthor = (authorIds) => {
   });
 };
 
+const getAuthor = (page, limit) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await Author.find()
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+      const totalAuthor = await Author.count();
+
+      resolve({
+        status: "OK",
+        message: "Get authors successfully!",
+        data: result,
+        totalAuthor,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
 module.exports = {
+  getAuthor,
   createAuthor,
   getAllAuthor,
-  getAuthor,
+  getAuthorById,
   updateAuthor,
   deleteAuthor,
   deleteManyAuthor,

@@ -40,7 +40,7 @@ const getAllContact = () => {
   });
 };
 
-const getContact = (contactId) => {
+const getContactById = (contactId) => {
   return new Promise(async (resolve, reject) => {
     try {
       const checkContact = await Contact.findOne({
@@ -67,6 +67,28 @@ const getContact = (contactId) => {
   });
 };
 
+const getContact = (page, limit) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await Contact.find()
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+      const totalContact = await Contact.count();
+
+      resolve({
+        status: "OK",
+        message: "Get contacts successfully!",
+        data: result,
+        totalContact,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 const updateContact = (contactId, data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -81,9 +103,13 @@ const updateContact = (contactId, data) => {
         });
       }
 
-      const dataUpdateContact = await Contact.findByIdAndUpdate(contactId, data, {
-        new: true,
-      });
+      const dataUpdateContact = await Contact.findByIdAndUpdate(
+        contactId,
+        data,
+        {
+          new: true,
+        }
+      );
 
       resolve({
         status: "OK",
@@ -165,6 +191,7 @@ module.exports = {
   createContact,
   getAllContact,
   getContact,
+  getContactById,
   updateContact,
   deleteContact,
   deleteManyContact,

@@ -29,7 +29,7 @@ const getAllGenre = async (req, res) => {
   }
 };
 
-const getGenre = async (req, res) => {
+const getGenreById = async (req, res) => {
   try {
     const genreId = req.params.id;
 
@@ -40,8 +40,23 @@ const getGenre = async (req, res) => {
       });
     }
 
-    const respone = await GenreService.getGenre(genreId);
+    const respone = await GenreService.getGenreById(genreId);
     return res.status(200).json(respone);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
+const getGenre = async (req, res) => {
+  try {
+    const { page, limit } = req.query;
+    const response = await GenreService.getGenre(
+      Number(page) || 1,
+      Number(limit) || 10
+    );
+    return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
       message: e,
@@ -104,8 +119,9 @@ const deleteManyGenre = async (req, res) => {
 
 module.exports = {
   createGenre,
-  getAllGenre,
   getGenre,
+  getAllGenre,
+  getGenreById,
   updateGenre,
   deleteGenre,
   deleteManyGenre,

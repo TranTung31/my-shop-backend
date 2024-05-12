@@ -91,7 +91,9 @@ const updateUser = (id, data) => {
         });
       }
 
-      const dataUpdateUser = await User.findByIdAndUpdate(id, data, { new: true });
+      const dataUpdateUser = await User.findByIdAndUpdate(id, data, {
+        new: true,
+      });
 
       resolve({
         status: "OK",
@@ -187,11 +189,33 @@ const getCountUser = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const result = await User.count();
-      
+
       resolve({
         status: "OK",
         message: "Get count user success!",
         data: result,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const getUser = (page, limit) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await User.find()
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+      const totalUser = await User.count();
+
+      resolve({
+        status: "OK",
+        message: "Get users successfully!",
+        data: result,
+        totalUser,
       });
     } catch (e) {
       reject(e);
@@ -207,5 +231,6 @@ module.exports = {
   getAllUser,
   getDetailUser,
   deleteManyUser,
+  getUser,
   getCountUser,
 };
