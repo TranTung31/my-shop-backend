@@ -2,17 +2,19 @@ const AuthorService = require("../services/AuthorService");
 
 const createAuthor = async (req, res) => {
   try {
-    const { name, bio } = req.body;
+    const { name } = req.body;
+
     if (!name) {
-      return res.status(404).json({
+      res.status(404).json({
         status: "ERROR",
         message: "The input is required!",
       });
     }
-    const respone = await AuthorService.createAuthor(req.body);
-    return res.status(200).json(respone);
+
+    const response = await AuthorService.createAuthor(req.body);
+    res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({
+    res.status(404).json({
       message: e,
     });
   }
@@ -20,10 +22,10 @@ const createAuthor = async (req, res) => {
 
 const getAllAuthor = async (req, res) => {
   try {
-    const respone = await AuthorService.getAllAuthor();
-    return res.status(200).json(respone);
+    const response = await AuthorService.getAllAuthor();
+    res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({
+    res.status(404).json({
       message: e,
     });
   }
@@ -34,16 +36,16 @@ const getAuthorById = async (req, res) => {
     const authorId = req.params.id;
 
     if (!authorId) {
-      return res.status(404).json({
+      res.status(400).json({
         status: "ERROR",
         message: "The author id is required!",
       });
     }
 
-    const respone = await AuthorService.getAuthorById(authorId);
-    return res.status(200).json(respone);
+    const response = await AuthorService.getAuthorById(authorId);
+    res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({
+    res.status(404).json({
       message: e,
     });
   }
@@ -52,19 +54,18 @@ const getAuthorById = async (req, res) => {
 const updateAuthor = async (req, res) => {
   try {
     const authorId = req.params.id;
-    const data = req.body;
 
     if (!authorId) {
-      return res.status(404).json({
+      res.status(404).json({
         status: "ERROR",
         message: "The author id is required!",
       });
     }
 
-    const respone = await AuthorService.updateAuthor(authorId, data);
-    return res.status(200).json(respone);
+    const response = await AuthorService.updateAuthor(authorId, req.body);
+    res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({
+    res.status(404).json({
       message: e,
     });
   }
@@ -75,16 +76,16 @@ const deleteAuthor = async (req, res) => {
     const authorId = req.params.id;
 
     if (!authorId) {
-      return res.status(404).json({
+      res.status(404).json({
         status: "ERROR",
         message: "The author id is required!",
       });
     }
 
-    const respone = await AuthorService.deleteAuthor(authorId);
-    return res.status(200).json(respone);
+    const response = await AuthorService.deleteAuthor(authorId);
+    res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({
+    res.status(404).json({
       message: e,
     });
   }
@@ -93,10 +94,10 @@ const deleteAuthor = async (req, res) => {
 const deleteManyAuthor = async (req, res) => {
   try {
     const authorIds = req.body;
-    const respone = await AuthorService.deleteManyAuthor(authorIds);
-    return res.status(200).json(respone);
+    const response = await AuthorService.deleteManyAuthor(authorIds);
+    res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({
+    res.status(404).json({
       message: e,
     });
   }
@@ -109,9 +110,9 @@ const getAuthor = async (req, res) => {
       Number(page) || 1,
       Number(limit) || 10
     );
-    return res.status(200).json(response);
+    res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({
+    res.status(404).json({
       message: e,
     });
   }

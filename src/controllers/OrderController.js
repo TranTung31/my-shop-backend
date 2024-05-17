@@ -125,7 +125,6 @@ const deleteManyOrder = async (req, res) => {
 const updateOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
-    const data = req.body;
 
     if (!orderId) {
       return res.status(200).json({
@@ -134,8 +133,8 @@ const updateOrder = async (req, res) => {
       });
     }
 
-    const respone = await OrderService.updateOrder(orderId, data);
-    return res.status(200).json(respone);
+    const response = await OrderService.updateOrder(orderId, req.body);
+    return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
       message: e,
@@ -181,8 +180,8 @@ const getOrder = async (req, res) => {
 };
 
 module.exports = {
-  updateOrder,
   createOrder,
+  updateOrder,
   getOrderById,
   getOrderDetail,
   deleteOrder,
