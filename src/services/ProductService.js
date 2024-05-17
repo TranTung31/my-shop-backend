@@ -1,23 +1,21 @@
 const Product = require("../models/ProductModel");
 
-const createProduct = (product) => {
+const createProduct = (reqBody) => {
   return new Promise(async (resolve, reject) => {
     const {
       name,
       image,
-      type,
       price,
       countInStock,
-      rating,
-      description,
       discount,
-      author,
-      numberOfBook,
-      formatBook,
-      publisherID,
-      genreID,
-      authorID,
-    } = product;
+      description,
+      pageCount,
+      format,
+      weight,
+      authorId,
+      genreId,
+      publisherId,
+    } = reqBody;
     try {
       const checkProduct = await Product.findOne({
         name: name,
@@ -26,31 +24,28 @@ const createProduct = (product) => {
       if (checkProduct !== null) {
         resolve({
           status: "ERROR",
-          message: "The name product is required!",
+          message: "The book title already exists!",
         });
       } else {
         const newProduct = await Product.create({
-          name: name,
-          image: image,
-          type: type,
-          price: price,
-          countInStock: countInStock,
-          discount: discount,
-          rating: rating,
-          description: description,
-          author: author,
-          numberOfBook: numberOfBook,
-          formatBook: formatBook,
-          description: description,
-          publisherID: publisherID,
-          genreID: genreID,
-          authorID: authorID,
+          name,
+          image,
+          price,
+          countInStock,
+          discount,
+          description,
+          pageCount,
+          format,
+          weight,
+          authorId,
+          genreId,
+          publisherId,
         });
 
         if (newProduct) {
           resolve({
             status: "OK",
-            message: "SUCCESS",
+            message: "Create new book successfully!",
             data: newProduct,
           });
         }
@@ -61,25 +56,26 @@ const createProduct = (product) => {
   });
 };
 
-const updateProduct = (id, data) => {
+const updateProduct = (productId, data) => {
   return new Promise(async (resolve, reject) => {
     try {
       const checkProduct = await Product.findOne({
-        _id: id,
+        _id: productId,
       });
+
       if (checkProduct === null) {
         resolve({
           status: "ERROR",
-          message: "The product is not definded",
+          message: "The product is not definded!",
         });
       } else {
-        const product = await Product.findByIdAndUpdate(id, data, {
+        const result = await Product.findByIdAndUpdate(productId, data, {
           new: true,
         });
         resolve({
           status: "OK",
-          message: "SUCCESS",
-          data: product,
+          message: "Update the product successfully!",
+          data: result,
         });
       }
     } catch (e) {
@@ -115,22 +111,23 @@ const getDetailProduct = (id) => {
   });
 };
 
-const deleteProduct = (id) => {
+const deleteProduct = (productId) => {
   return new Promise(async (resolve, reject) => {
     try {
       const checkProduct = await Product.findOne({
-        _id: id,
+        _id: productId,
       });
+
       if (checkProduct === null) {
         resolve({
           status: "ERROR",
-          message: "The product is not definded",
+          message: "The product is not definded!",
         });
       } else {
-        await Product.findByIdAndDelete(id);
+        await Product.findByIdAndDelete(productId);
         resolve({
           status: "OK",
-          message: "Delete product success",
+          message: "Delete the product successfully!",
         });
       }
     } catch (e) {
@@ -566,8 +563,8 @@ const getProduct = (page, limit) => {
 module.exports = {
   createProduct,
   updateProduct,
-  getDetailProduct,
   deleteProduct,
+  getDetailProduct,
   getAllProduct,
   deleteManyProduct,
   getAllType,

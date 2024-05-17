@@ -1,4 +1,4 @@
-const Genre = require("../models/GenreModal");
+const Genre = require("../models/GenreModel");
 
 const createGenre = (data) => {
   return new Promise(async (resolve, reject) => {

@@ -1,4 +1,4 @@
-const Order = require("../models/OrderModal");
+const Order = require("../models/OrderModel");
 const Product = require("../models/ProductModel");
 const EmailService = require("./EmailService");
 
@@ -35,7 +35,7 @@ const createOrder = (order) => {
         if (productData) {
           return {
             status: "OK",
-            message: "SUCCESS",
+            message: "Update the product ordered successfully!",
           };
         } else {
           return {
@@ -80,7 +80,7 @@ const createOrder = (order) => {
           await EmailService.sendEmailCreateOrder(email, orderItems);
           resolve({
             status: "OK",
-            message: "SUCCESS",
+            message: "Order the product successfully!",
           });
         }
       }
@@ -210,6 +210,7 @@ const deleteOrder = (orderId, orderItems) => {
 
         if (productData) {
           const checkOrder = await Order.findByIdAndDelete(orderId);
+
           if (checkOrder === null) {
             resolve({
               status: "ERROR",
@@ -218,7 +219,7 @@ const deleteOrder = (orderId, orderItems) => {
           } else {
             resolve({
               status: "OK",
-              message: "SUCCESS",
+              message: "Delete the order successfully!",
               data: checkOrder,
             });
           }
@@ -255,18 +256,21 @@ const updateOrder = (id, data) => {
   return new Promise(async (resolve, reject) => {
     try {
       const checkOrder = await Order.findOne({ _id: id });
+
       if (checkOrder === null) {
         resolve({
           status: "ERROR",
           message: "The order is not defined!",
         });
       }
+
       const dataUpdateOrder = await Order.findByIdAndUpdate(id, data, {
         new: true,
       });
+      
       resolve({
         status: "OK",
-        message: "Update order success!",
+        message: "Update the order successfully!",
         data: dataUpdateOrder,
       });
     } catch (e) {

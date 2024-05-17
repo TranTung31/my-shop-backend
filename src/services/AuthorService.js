@@ -1,4 +1,4 @@
-const Author = require("../models/AuthorModal");
+const Author = require("../models/AuthorModel");
 
 const createAuthor = (data) => {
   return new Promise(async (resolve, reject) => {
@@ -23,7 +23,7 @@ const createAuthor = (data) => {
       if (createNewAuthor) {
         resolve({
           status: "OK",
-          message: "Create author success!",
+          message: "Create the author successfully!",
           data: createNewAuthor,
         });
       }
@@ -37,9 +37,10 @@ const getAllAuthor = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const allAuthor = await Author.find();
+
       resolve({
         status: "OK",
-        message: "Get all author success!",
+        message: "Get all the author successfully!",
         data: allAuthor,
       });
     } catch (e) {
@@ -66,7 +67,7 @@ const getAuthorById = (authorId) => {
 
       resolve({
         status: "OK",
-        message: "Get detail author success!",
+        message: "Get detail the author successfully!",
         data: author,
       });
     } catch (e) {
@@ -78,8 +79,6 @@ const getAuthorById = (authorId) => {
 const updateAuthor = (authorId, data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { name, bio } = data;
-
       const checkAuthor = await Author.findOne({
         _id: authorId,
       });
@@ -97,7 +96,7 @@ const updateAuthor = (authorId, data) => {
 
       resolve({
         status: "OK",
-        message: "Update the author success!",
+        message: "Update the author successfully!",
         data: dataUpdateAuthor,
       });
     } catch (e) {
@@ -124,7 +123,7 @@ const deleteAuthor = (authorId) => {
 
       resolve({
         status: "OK",
-        message: "Delete the author success!",
+        message: "Delete the author successfully!",
       });
     } catch (e) {
       reject(e);

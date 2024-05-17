@@ -1,4 +1,4 @@
-const Publisher = require("../models/PublisherModal");
+const Publisher = require("../models/PublisherModel");
 
 const createPublisher = (data) => {
   return new Promise(async (resolve, reject) => {
