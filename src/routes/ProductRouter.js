@@ -10,10 +10,13 @@ router
   .route("")
   .get(ProductController.getProduct)
   .post(ProductController.createProduct);
+
 router
   .route("/:id")
   .put(authMiddleware, ProductController.updateProduct)
   .delete(authMiddleware, ProductController.deleteProduct);
+
+router.route("/:id/rate").post(ProductController.ratingProduct);
 
 router.post(
   "/delete-many",
