@@ -182,6 +182,30 @@ const searchProduct = async (req, res) => {
   }
 };
 
+const ratingProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const { userId, rating } = req.body;
+
+    if (rating < 1 || rating > 5) {
+      res.status(400).json({
+        message: "Rating must be between 1 and 5!",
+      });
+    }
+
+    const response = await ProductService.ratingProduct(
+      productId,
+      userId,
+      rating
+    );
+    res.status(200).json(response);
+  } catch (e) {
+    res.status(404).json({
+      message: e,
+    });
+  }
+};
+
 const getProduct = async (req, res) => {
   try {
     const { page, limit } = req.query;
@@ -208,5 +232,6 @@ module.exports = {
   getCountProduct,
   getProductAuthor,
   searchProduct,
+  ratingProduct,
   getProduct,
 };

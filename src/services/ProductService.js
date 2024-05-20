@@ -154,11 +154,11 @@ const getAllProduct = (limit, page, sort, filter, publisher, rating) => {
           if (rating) {
             let ratingQuery = {};
             if (rating === 3) {
-              ratingQuery = { rating: { $gte: 3 } };
+              ratingQuery = { averageRating: { $gte: 3 } };
             } else if (rating === 4) {
-              ratingQuery = { rating: { $gte: 4 } };
+              ratingQuery = { averageRating: { $gte: 4 } };
             } else if (rating === 5) {
-              ratingQuery = { rating: 5 };
+              ratingQuery = { averageRating: 5 };
             }
             const result = await Product.find({
               ...ratingQuery,
@@ -229,11 +229,11 @@ const getAllProduct = (limit, page, sort, filter, publisher, rating) => {
         if (rating) {
           let ratingQuery = {};
           if (rating === 3) {
-            ratingQuery = { rating: { $gte: 3 } };
+            ratingQuery = { averageRating: { $gte: 3 } };
           } else if (rating === 4) {
-            ratingQuery = { rating: { $gte: 4 } };
+            ratingQuery = { averageRating: { $gte: 4 } };
           } else if (rating === 5) {
-            ratingQuery = { rating: 5 };
+            ratingQuery = { averageRating: 5 };
           }
 
           const result = await Product.find({
@@ -538,6 +538,50 @@ const searchProduct = (q) => {
   });
 };
 
+const ratingProduct = (productId, userId, rating) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const product = await Product.findById(productId);
+
+      if (!product) {
+        resolve({
+          status: "ERROR",
+          message: "Product not found!",
+        });
+      }
+
+      const findIndex = product.ratings.findIndex(
+        (item) => item.userId.toString() === userId.toString()
+      );
+
+      if (findIndex !== -1) {
+        product.ratings[findIndex].rating = rating;
+      } else {
+        product.ratings.push({
+          userId,
+          rating,
+        });
+      }
+
+      const totalRating = product.ratings.reduce(
+        (acc, curr) => acc + curr.rating,
+        0
+      );
+      product.averageRating = totalRating / product.ratings.length;
+
+      await product.save();
+
+      resolve({
+        status: "OK",
+        message: "Rating the product successfully!",
+        data: product,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 const getProduct = (page, limit) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -571,5 +615,6 @@ module.exports = {
   getCountProduct,
   getProductAuthor,
   searchProduct,
+  ratingProduct,
   getProduct,
 };
