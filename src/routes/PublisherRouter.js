@@ -6,7 +6,6 @@ const {
 } = require("../middleware/authMiddleware");
 const PublisherController = require("../controllers/PublisherController");
 
-router.route("").get(PublisherController.getPublisher);
 router.get("/get-all-publisher", PublisherController.getAllPublisher);
 router.get(
   "/get-publisher/:id",
@@ -33,5 +32,6 @@ router.post(
   authMiddleware,
   PublisherController.deleteManyPublisher
 );
+router.route("").get(PublisherController.getPublisher);
 
 module.exports = router;

@@ -7,6 +7,7 @@ const {
 const AuthorController = require("../controllers/AuthorController");
 
 router.get("/get-all-author", AuthorController.getAllAuthor);
+router.post("/delete-many", authMiddleware, AuthorController.deleteManyAuthor);
 
 router
   .route("")
@@ -18,7 +19,5 @@ router
   .get(AuthorController.getAuthorById)
   .put(authMiddleware, AuthorController.updateAuthor)
   .delete(authMiddleware, AuthorController.deleteAuthor);
-
-router.post("/delete-many", authMiddleware, AuthorController.deleteManyAuthor);
 
 module.exports = router;

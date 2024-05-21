@@ -6,16 +6,6 @@ const {
   authUserMiddleware,
 } = require("../middleware/authMiddleware");
 
-router
-  .route("")
-  .get(authMiddleware, OrderController.getOrder)
-  .post(authUserMiddleware, OrderController.createOrder);
-
-router
-  .route("/:id")
-  .put(authMiddleware, OrderController.updateOrder)
-  .delete(authUserMiddleware, OrderController.deleteOrder);
-
 router.post("/delete-many", authMiddleware, OrderController.deleteManyOrder);
 router.get("/get-order/:id", authUserMiddleware, OrderController.getOrderById);
 router.get(
@@ -26,5 +16,15 @@ router.get(
 router.get("/get-all-order", authMiddleware, OrderController.getAllOrder);
 router.get("/get-count-order", authMiddleware, OrderController.getCountOrder);
 router.get("/get-total-price", authMiddleware, OrderController.getTotalPrice);
+
+router
+  .route("")
+  .get(authMiddleware, OrderController.getOrder)
+  .post(authUserMiddleware, OrderController.createOrder);
+
+router
+  .route("/:id")
+  .put(authMiddleware, OrderController.updateOrder)
+  .delete(authUserMiddleware, OrderController.deleteOrder);
 
 module.exports = router;

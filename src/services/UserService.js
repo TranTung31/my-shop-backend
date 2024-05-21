@@ -13,7 +13,7 @@ const createUser = (newUser) => {
       if (checkUser !== null) {
         resolve({
           status: "ERROR",
-          message: "The email is already",
+          message: "The email is already!",
         });
       }
 
@@ -27,7 +27,7 @@ const createUser = (newUser) => {
       if (createdUser) {
         resolve({
           status: "OK",
-          message: "SUCCESS",
+          message: "Create the user successfully!",
           data: createdUser,
         });
       }
@@ -44,12 +44,14 @@ const loginUser = (userLogin) => {
       const checkUser = await User.findOne({
         email: email,
       });
+
       if (checkUser === null) {
         resolve({
           status: "ERR",
           message: "The email is not definded",
         });
       }
+
       const comparePassword = bcrypt.compareSync(password, checkUser.password);
       if (!comparePassword) {
         resolve({
@@ -57,17 +59,20 @@ const loginUser = (userLogin) => {
           message: "The password or user is incorrect",
         });
       }
+
       const access_token = await genneralAccessToken({
         id: checkUser.id,
         isAdmin: checkUser.isAdmin,
       });
+
       const refresh_token = await genneralRefreshToken({
         id: checkUser.id,
         isAdmin: checkUser.isAdmin,
       });
+
       resolve({
         status: "OK",
-        message: "SUCCESS",
+        message: "Login system successfully!",
         access_token,
         refresh_token,
       });
@@ -87,7 +92,7 @@ const updateUser = (id, data) => {
       if (checkUser === null) {
         resolve({
           status: "OK",
-          message: "The user is not defined!",
+          message: "The user not found!",
         });
       }
 
@@ -97,7 +102,7 @@ const updateUser = (id, data) => {
 
       resolve({
         status: "OK",
-        message: "Update the user success!",
+        message: "Update the user successfully!",
         data: dataUpdateUser,
       });
     } catch (e) {
@@ -124,7 +129,7 @@ const deleteUser = (id) => {
 
       resolve({
         status: "OK",
-        message: "Delete the user success!",
+        message: "Delete the user successfully!",
       });
     } catch (e) {
       reject(e);
@@ -138,7 +143,7 @@ const getAllUser = () => {
       const user = await User.find();
       resolve({
         status: "OK",
-        message: "Get all user success!",
+        message: "Get all users successfully!",
         data: user,
       });
     } catch (e) {
@@ -153,15 +158,17 @@ const getDetailUser = (id) => {
       const user = await User.findOne({
         _id: id,
       });
+
       if (user === null) {
         resolve({
           status: "ERROR",
-          message: "The user is not defined",
+          message: "The user not found!",
         });
       }
+
       resolve({
         status: "OK",
-        message: "Get user detail success",
+        message: "Get user detail successfully!",
         data: user,
       });
     } catch (e) {
@@ -177,7 +184,7 @@ const deleteManyUser = (ids) => {
 
       resolve({
         status: "OK",
-        message: "Delete many the user success!",
+        message: "Delete many the user successfullt!",
       });
     } catch (e) {
       reject(e);
@@ -192,7 +199,7 @@ const getCountUser = () => {
 
       resolve({
         status: "OK",
-        message: "Get count user success!",
+        message: "Get count user successfully!",
         data: result,
       });
     } catch (e) {

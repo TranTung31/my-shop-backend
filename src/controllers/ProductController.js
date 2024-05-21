@@ -62,16 +62,18 @@ const updateProduct = async (req, res) => {
 const getDetailProduct = async (req, res) => {
   try {
     const productId = req.params.id;
+
     if (!productId) {
-      return res.status(404).json({
+      res.status(404).json({
         status: "ERROR",
         message: "The product id is required!",
       });
     }
+
     const response = await ProductService.getDetailProduct(productId);
-    return res.status(200).json(response);
+    res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({
+    res.status(404).json({
       message: e,
     });
   }
@@ -162,9 +164,10 @@ const getProductAuthor = async (req, res) => {
       publisher,
       Number(rating)
     );
-    return res.status(200).json(response);
+
+    res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({
+    res.status(404).json({
       message: e,
     });
   }
@@ -221,6 +224,21 @@ const getProduct = async (req, res) => {
   }
 };
 
+const getBestSeller = async (req, res) => {
+  try {
+    const { page, limit } = req.query;
+    const response = await ProductService.getBestSeller(
+      Number(page || 1),
+      Number(limit || 12)
+    );
+    res.status(200).json(response);
+  } catch (e) {
+    res.status(404).json({
+      message: e,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   updateProduct,
@@ -234,4 +252,5 @@ module.exports = {
   searchProduct,
   ratingProduct,
   getProduct,
+  getBestSeller,
 };

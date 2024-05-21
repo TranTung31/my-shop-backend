@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const dotenv = require("dotenv");
 
 router.get("/config", (req, res) => {
   return res.status(200).json({
