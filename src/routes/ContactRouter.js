@@ -6,7 +6,6 @@ const {
 } = require("../middleware/authMiddleware");
 const ContactController = require("../controllers/ContactController");
 
-router.route("").get(ContactController.getContact);
 router.get("/get-all-contact", ContactController.getAllContact);
 router.get("/get-contact/:id", ContactController.getContactById);
 router.get(
@@ -34,5 +33,7 @@ router.post(
   authMiddleware,
   ContactController.deleteManyContact
 );
+
+router.route("").get(ContactController.getContact);
 
 module.exports = router;

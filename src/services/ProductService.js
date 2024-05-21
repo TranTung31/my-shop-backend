@@ -94,14 +94,14 @@ const getDetailProduct = (id) => {
       if (checkProduct === null) {
         resolve({
           status: "ERROR",
-          message: "The product is not definded!",
+          message: "The product not found!",
         });
       } else {
         const product = await Product.findById(id);
 
         resolve({
           status: "OK",
-          message: "Get detail product success!",
+          message: "Get detail the product successfully!",
           data: product,
         });
       }
@@ -373,11 +373,11 @@ const getProductAuthor = (limit, page, sort, filter, publisher, rating) => {
           if (rating) {
             let ratingQuery = {};
             if (rating === 3) {
-              ratingQuery = { rating: { $gte: 3 } };
+              ratingQuery = { averageRating: { $gte: 3 } };
             } else if (rating === 4) {
-              ratingQuery = { rating: { $gte: 4 } };
+              ratingQuery = { averageRating: { $gte: 4 } };
             } else if (rating === 5) {
-              ratingQuery = { rating: 5 };
+              ratingQuery = { averageRating: 5 };
             }
             const allProductRating = await Product.find({
               ...ratingQuery,
@@ -434,11 +434,11 @@ const getProductAuthor = (limit, page, sort, filter, publisher, rating) => {
         if (rating) {
           let ratingQuery = {};
           if (rating === 3) {
-            ratingQuery = { rating: { $gte: 3 } };
+            ratingQuery = { averageRating: { $gte: 3 } };
           } else if (rating === 4) {
-            ratingQuery = { rating: { $gte: 4 } };
+            ratingQuery = { averageRating: { $gte: 4 } };
           } else if (rating === 5) {
-            ratingQuery = { rating: 5 };
+            ratingQuery = { averageRating: 5 };
           }
           const allProductRating = await Product.find({
             ...ratingQuery,
@@ -604,6 +604,28 @@ const getProduct = (page, limit) => {
   });
 };
 
+const getBestSeller = (page, limit) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await Product.find()
+        .sort({ selled: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+      const totalProduct = result.length;
+
+      resolve({
+        totalProduct,
+        status: "OK",
+        message: "Get products best seller successfully!",
+        data: result,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createProduct,
   updateProduct,
@@ -617,4 +639,5 @@ module.exports = {
   searchProduct,
   ratingProduct,
   getProduct,
+  getBestSeller,
 };

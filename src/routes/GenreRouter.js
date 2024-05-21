@@ -6,7 +6,6 @@ const {
 } = require("../middleware/authMiddleware");
 const GenreController = require("../controllers/GenreController");
 
-router.route("").get(GenreController.getGenre);
 router.get("/get-all-genre", GenreController.getAllGenre);
 router.get("/get-genre/:id", GenreController.getGenreById);
 router.post("/create-genre", authMiddleware, GenreController.createGenre);
@@ -17,5 +16,6 @@ router.post(
   authMiddleware,
   GenreController.deleteManyGenre
 );
+router.route("").get(GenreController.getGenre);
 
 module.exports = router;
