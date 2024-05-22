@@ -84,16 +84,18 @@ const getOrderDetail = async (req, res) => {
 const deleteOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
+
     if (!orderId) {
-      return res.status(404).json({
+      res.status(404).json({
         status: "ERROR",
         message: "The order id is required!",
       });
     }
+    
     const response = await OrderService.deleteOrder(orderId, req.body);
-    return res.status(200).json(response);
+    res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({
+    res.status(404).json({
       message: e,
     });
   }
