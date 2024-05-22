@@ -2,7 +2,7 @@ const Order = require("../models/OrderModel");
 const Product = require("../models/ProductModel");
 const EmailService = require("./EmailService");
 
-const createOrder = (order) => {
+const createOrder = (reqBody) => {
   return new Promise(async (resolve, reject) => {
     try {
       const {
@@ -20,7 +20,7 @@ const createOrder = (order) => {
         isPaid,
         paidAt,
         email,
-      } = order;
+      } = reqBody;
 
       const result = orderItems.map(async (order) => {
         const productData = await Product.findOneAndUpdate(
@@ -65,6 +65,7 @@ const createOrder = (order) => {
             address,
             city,
             phone,
+            email,
           },
           paymentMethod,
           deliveryMethod,
@@ -195,9 +196,11 @@ const getOrderDetail = (orderId) => {
   });
 };
 
-const deleteOrder = (orderId, orderItems) => {
+const deleteOrder = (orderId, reqBody) => {
   return new Promise(async (resolve, reject) => {
     try {
+      const { orderItems, email } = reqBody;
+
       const result = orderItems.map(async (order) => {
         const productData = await Product.findOneAndUpdate(
           {
@@ -209,18 +212,19 @@ const deleteOrder = (orderId, orderItems) => {
         );
 
         if (productData) {
-          const checkOrder = await Order.findByIdAndDelete(orderId);
+          const orderDelete = await Order.findByIdAndDelete(orderId);
 
-          if (checkOrder === null) {
+          if (orderDelete === null) {
             resolve({
               status: "ERROR",
               message: "The order id is not definded!",
             });
           } else {
+            await EmailService.sendEmailDeleteOrder(email, orderDelete);
             resolve({
               status: "OK",
               message: "Delete the order successfully!",
-              data: checkOrder,
+              data: orderDelete,
             });
           }
         } else {
@@ -243,7 +247,7 @@ const getAllOrder = () => {
       const allOrder = await Order.find();
       resolve({
         status: "OK",
-        message: "Get all order success!",
+        message: "Get all order successfully!",
         data: allOrder,
       });
     } catch (e) {
@@ -267,7 +271,7 @@ const updateOrder = (id, data) => {
       const dataUpdateOrder = await Order.findByIdAndUpdate(id, data, {
         new: true,
       });
-      
+
       resolve({
         status: "OK",
         message: "Update the order successfully!",
@@ -285,7 +289,7 @@ const deleteManyOrder = (ids) => {
       await Order.deleteMany({ _id: ids });
       resolve({
         status: "OK",
-        message: "Delete many order success!",
+        message: "Delete many order successfully!",
       });
     } catch (e) {
       reject(e);
@@ -299,7 +303,7 @@ const getCountOrder = () => {
       const result = await Order.countDocuments();
       resolve({
         status: "OK",
-        message: "Get count order success!",
+        message: "Get count order successfully!",
         data: result,
       });
     } catch (e) {
@@ -321,7 +325,7 @@ const getTotalPrice = () => {
       }, 0);
       resolve({
         status: "SUCCESS",
-        message: "Get total price success!",
+        message: "Get total price successfully!",
         data: totalPrice,
       });
     } catch (e) {
@@ -350,7 +354,7 @@ const getOrder = (page, limit) => {
       reject(e);
     }
   });
-}
+};
 
 module.exports = {
   createOrder,
@@ -362,5 +366,5 @@ module.exports = {
   deleteManyOrder,
   getCountOrder,
   getTotalPrice,
-  getOrder
+  getOrder,
 };

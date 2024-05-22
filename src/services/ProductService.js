@@ -567,7 +567,7 @@ const ratingProduct = (productId, userId, rating) => {
         (acc, curr) => acc + curr.rating,
         0
       );
-      product.averageRating = totalRating / product.ratings.length;
+      product.averageRating = (totalRating / product.ratings.length).toFixed(1);
 
       await product.save();
 
