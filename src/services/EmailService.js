@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const sendEmailCreateOrder = async (email, orderItems) => {
+const sendEmailCreateOrder = async (email, newOrder) => {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -17,29 +17,35 @@ const sendEmailCreateOrder = async (email, orderItems) => {
 
   let listItems = "";
   const attachImage = [];
-  orderItems.forEach((item) => {
+  newOrder?.orderItems.forEach((item) => {
     listItems += `
-    <div>
-        <div>
-            Bạn đã đặt sản phẩm <b>${item.name}</b> với số lượng <b>${
-      item.amount
-    }</b> và giá
-            là <b>${item.price}</b>
-        </div>
-        <div>Hình ảnh sản phẩm</div>
-        ${attachImage.push({ path: item.image })}
-    </div>`;
+    <ul>
+      <li>Tên sách: ${item.name}</li>
+      <li>Số lượng: ${item.amount}</li>
+      <li>Tổng số tiền: ${item.price}</li>
+    </ul>
+    `;
+    attachImage.push({ path: item.image });
   });
 
-  const info = await transporter.sendMail({
+  await transporter.sendMail({
     from: process.env.EMAIL_ACCOUNT, // sender address
     to: email, // list of receivers
     subject: "Bạn đã đặt hàng thành công tại PeggyBooks!", // Subject line
     text: "Hello world?", // plain text body
     html: `
     <div>
-        <b>Bạn đã đặt hàng thành công tại PeggyBooks!</b>
-        ${listItems}
+      <p>Chào <strong>${newOrder?.shippingAddress?.fullName}</strong>,</p>
+      <p>
+        Chúng tôi xin chân thành cảm ơn quý khách đã đặt sách tại PeggyBooks. Đơn hàng của quý khách đã được xác nhận và chúng tôi đang tiến hành chuẩn bị để gửi đến quý khách trong thời gian sớm nhất.
+      </p>
+      <p>Chi tiết đơn hàng:</p>
+      ${listItems}
+      <p>Quý khách có thể kiểm tra tình trạng đơn hàng và theo dõi lộ trình giao hàng qua tài khoản của mình trên website của chúng tôi. Nếu có bất kỳ thắc mắc hoặc cần hỗ trợ thêm, vui lòng liên hệ với chúng tôi qua <a href="mailto:kuroko3105@gmail.com">kuroko3105@gmail.com</a>.</p>
+      <p>Chúng tôi hy vọng quý khách sẽ có những trải nghiệm thú vị với cuốn sách đã chọn.</p>
+      <p>Trân trọng,<br>
+      [Đội Ngũ Hỗ Trợ Khách Hàng]<br>
+      PeggyBooks Shop</p>
     </div>`, // html body
     attachments: attachImage,
   });
