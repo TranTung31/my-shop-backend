@@ -230,6 +230,51 @@ const getUser = (page, limit) => {
   });
 };
 
+const changePassword = (userId, reqBody) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { currentPassword, newPassword } = reqBody;
+
+      const findUser = await User.findOne({
+        _id: userId,
+      });
+
+      if (findUser === null) {
+        resolve({
+          status: "ERROR",
+          message: "The user not found!",
+        });
+      }
+
+      const passwordDB = findUser?.password;
+
+      bcrypt.compare(currentPassword, passwordDB, function (err, result) {
+        if (result) {
+          bcrypt.hash(newPassword, 10, async function (err, hash) {
+            await User.findByIdAndUpdate(
+              userId,
+              { password: hash },
+              { new: true }
+            );
+          });
+
+          resolve({
+            status: "OK",
+            message: "Change password successfully!"
+          });
+        } else {
+          resolve({
+            status: "ERROR",
+            message: "Mật khẩu tài khoản sai!",
+          });
+        }
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -240,4 +285,5 @@ module.exports = {
   deleteManyUser,
   getUser,
   getCountUser,
+  changePassword,
 };
