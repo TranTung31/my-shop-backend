@@ -78,7 +78,7 @@ const createOrder = (reqBody) => {
         });
 
         if (newOrder) {
-          await EmailService.sendEmailCreateOrder(email, orderItems);
+          await EmailService.sendEmailCreateOrder(email, newOrder);
           resolve({
             status: "OK",
             message: "Order the product successfully!",
@@ -106,6 +106,7 @@ const getOrderById = (userId, statusDelivery, pageString) => {
           result = await Order.find({
             user: userId,
           })
+            .sort({ createdAt: -1 })
             .skip((page - 1) * PAGE_SIZE)
             .limit(PAGE_SIZE);
           totalOrder = await Order.count({
@@ -118,6 +119,7 @@ const getOrderById = (userId, statusDelivery, pageString) => {
             user: userId,
             isDelivered: "Chờ giao hàng",
           })
+            .sort({ createdAt: -1 })
             .skip((page - 1) * PAGE_SIZE)
             .limit(PAGE_SIZE);
           totalOrder = await Order.count({
@@ -131,6 +133,7 @@ const getOrderById = (userId, statusDelivery, pageString) => {
             user: userId,
             isDelivered: "Đang giao hàng",
           })
+            .sort({ createdAt: -1 })
             .skip((page - 1) * PAGE_SIZE)
             .limit(PAGE_SIZE);
           totalOrder = await Order.count({
@@ -144,6 +147,7 @@ const getOrderById = (userId, statusDelivery, pageString) => {
             user: userId,
             isDelivered: "Đã giao hàng",
           })
+            .sort({ createdAt: -1 })
             .skip((page - 1) * PAGE_SIZE)
             .limit(PAGE_SIZE);
           totalOrder = await Order.count({
