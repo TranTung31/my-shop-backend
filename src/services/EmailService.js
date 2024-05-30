@@ -82,7 +82,39 @@ const sendEmailDeleteOrder = async (email, order) => {
   });
 };
 
+const sendEmailContact = async (newContact) => {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+      user: process.env.EMAIL_ACCOUNT,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_ACCOUNT, // sender address
+    to: newContact?.email, // list of receivers
+    subject: `Liên hệ có mã ${newContact?._id} đã được gửi thành công!`, // Subject line
+    text: "Hello world?", // plain text body
+    html: `
+    <div>
+      <p>Chào <strong>${newContact?.userName}</strong>,</p>
+      <p>
+        Chúng tôi xin thông báo rằng liên hệ của bạn với mã số <strong>LH${newContact?._id}</strong> đã được gửi thành công. Chúng tôi sẽ phản hồi ý kiến đóng góp của bạn trong thời gian sớm nhất.
+      </p>
+      <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>
+      <p>Trân trọng,<br>
+      [Đội Ngũ Hỗ Trợ Khách Hàng]<br>
+      PeggyBooks Shop</p>
+    </div>`, // html body
+  });
+};
+
 module.exports = {
   sendEmailCreateOrder,
   sendEmailDeleteOrder,
+  sendEmailContact
 };

@@ -1,4 +1,5 @@
 const Contact = require("../models/ContactModel");
+const EmailService = require("./EmailService");
 
 const createContact = (data) => {
   return new Promise(async (resolve, reject) => {
@@ -13,6 +14,7 @@ const createContact = (data) => {
       });
 
       if (createNewContact) {
+        await EmailService.sendEmailContact(createNewContact);
         resolve({
           status: "OK",
           message: "Create contact success!",
