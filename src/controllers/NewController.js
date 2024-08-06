@@ -18,9 +18,9 @@ const getNew = async (req, res) => {
       Number(page) || 1,
       Number(limit) || 10
     );
-    return res.status(200).json(response);
+    res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({
+    res.status(400).json({
       message: e,
     });
   }

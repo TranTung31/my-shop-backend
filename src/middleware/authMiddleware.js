@@ -1,6 +1,35 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const JwtProvider = require("../providers/JwtProvider");
+
 dotenv.config();
+
+const isAuthorized = async (req, res, next) => {
+  const accessTokenFromHeader = req.headers?.authorization;
+
+  if (!accessTokenFromHeader) {
+    res.status(401).json({ message: "Unauthorized! (Token not found!)" });
+    return;
+  }
+
+  try {
+    const accessTokenDecoded = await JwtProvider.verifyToken(
+      accessTokenFromHeader.substring("Bearer ".length),
+      process.env.ACCESS_TOKEN
+    );
+
+    req.JwtDecoded = accessTokenDecoded;
+
+    next();
+  } catch (error) {
+    if (error?.message?.includes("jwt expired")) {
+      res.status(410).json({ message: "Need to refresh token!" });
+      return;
+    }
+
+    res.status(401).json({ message: "Unauthorized! Please login!" });
+  }
+};
 
 const authMiddleware = (req, res, next) => {
   const token = req.headers.token?.split(" ")[1];
@@ -48,4 +77,5 @@ const authUserMiddleware = (req, res, next) => {
 module.exports = {
   authMiddleware,
   authUserMiddleware,
+  isAuthorized,
 };
