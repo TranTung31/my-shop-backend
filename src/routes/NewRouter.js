@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const NewController = require("../controllers/NewController");
+const { isAuthorized } = require("../middleware/authMiddleware")
 
-router.route("").get(NewController.getNew).post(NewController.createNew);
+router.route("").get(isAuthorized, NewController.getNew).post(NewController.createNew);
 
 router
   .route("/:id")

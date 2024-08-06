@@ -4,6 +4,7 @@ const UserController = require("../controllers/UserController");
 const {
   authMiddleware,
   authUserMiddleware,
+  isAuthorized,
 } = require("../middleware/authMiddleware");
 
 router.post("/sign-up", UserController.createUser);
@@ -23,6 +24,7 @@ router.get(
   UserController.getDetailUser
 );
 router.post("/refresh-token", UserController.refreshToken);
+router.put("/refresh-token", UserController.refreshTokenAPI);
 router.post("/delete-many", authMiddleware, UserController.deleteManyUser);
 router.get("/get-count-user", authMiddleware, UserController.getCountUser);
 

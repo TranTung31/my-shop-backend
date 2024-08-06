@@ -1,5 +1,9 @@
 const UserService = require("../services/UserService");
 const JwtService = require("../services/JwtService");
+const JwtProvider = require("../providers/JwtProvider");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const createUser = async (req, res) => {
   try {
@@ -221,6 +225,39 @@ const changePassword = async (req, res) => {
   }
 };
 
+const refreshTokenAPI = async (req, res) => {
+  try {
+    const refreshTokenFromBody = req.body?.refreshToken;
+
+    if (!refreshTokenFromBody) {
+      res.status(401).json({ message: "Unauthorized! (Token not found!)" });
+      return;
+    }
+
+    const refreshTokenDecoded = await JwtProvider.verifyToken(
+      refreshTokenFromBody,
+      process.env.REFRESH_TOKEN
+    );
+
+    const userInfo = {
+      id: refreshTokenDecoded?.id,
+      isAdmin: refreshTokenDecoded?.isAdmin,
+    };
+
+    const accessToken = await JwtProvider.generateToken(
+      userInfo,
+      process.env.ACCESS_TOKEN,
+      "5s"
+    );
+
+    res.status(200).json({ accessToken });
+  } catch (e) {
+    res.status(400).json({
+      message: e,
+    });
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -230,6 +267,7 @@ module.exports = {
   getAllUser,
   getDetailUser,
   refreshToken,
+  refreshTokenAPI,
   deleteManyUser,
   getUser,
   getCountUser,

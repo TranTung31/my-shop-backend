@@ -1,39 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const {
-  authMiddleware,
-  authUserMiddleware,
-} = require("../middleware/authMiddleware");
-const ContactController = require("../controllers/ContactController");
+const { isAuthorized } = require("@/middleware/authMiddleware");
+const ContactController = require("@controllers/ContactController");
 
-router.get("/get-all-contact", ContactController.getAllContact);
-router.get("/get-contact/:id", ContactController.getContactById);
-router.get(
-  "/get-contact-user/:id",
-  authUserMiddleware,
-  ContactController.getContactUser
-);
-router.post(
-  "/create-contact",
-  authUserMiddleware,
-  ContactController.createContact
-);
-router.put(
-  "/update-contact/:id",
-  authMiddleware,
-  ContactController.updateContact
-);
-router.delete(
-  "/delete-contact/:id",
-  authUserMiddleware,
-  ContactController.deleteContact
-);
+router
+  .route("")
+  .get(isAuthorized, ContactController.getContact)
+  .post(isAuthorized, ContactController.createContact);
+
+router
+  .route("/:id")
+  .get(isAuthorized, ContactController.getContactById)
+  .put(isAuthorized, ContactController.updateContact)
+  .delete(isAuthorized, ContactController.deleteContact);
+
+router.get("/get-contact/:id", isAuthorized, ContactController.getContactUser);
+
 router.post(
   "/delete-many-contact",
-  authMiddleware,
+  isAuthorized,
   ContactController.deleteManyContact
 );
-
-router.route("").get(ContactController.getContact);
 
 module.exports = router;
