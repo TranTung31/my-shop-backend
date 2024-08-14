@@ -10,11 +10,6 @@ const {
 router.post('/sign-up', UserController.createUser)
 router.post('/sign-in', UserController.loginUser)
 router.post('/log-out', UserController.logOutUser)
-router.put(
-  '/change-password/:id',
-  authUserMiddleware,
-  UserController.changePassword
-)
 
 router.delete('/delete-user/:id', authMiddleware, UserController.deleteUser)
 router.get('/get-all-user', authMiddleware, UserController.getAllUser)
@@ -33,5 +28,6 @@ router
   .route('/:id')
   .get(isAuthorized, UserController.getUserDatail)
   .put(isAuthorized, UserController.updateUser)
+router.put('/change-password/:id', isAuthorized, UserController.changePassword)
 
 module.exports = router

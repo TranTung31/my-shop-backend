@@ -229,9 +229,13 @@ const changePassword = async (req, res) => {
     }
 
     const response = await UserService.changePassword(userId, req.body)
-    res.status(200).json(response)
+    if (response.status === 'OK') {
+      res.status(200).json(response)
+    } else {
+      res.status(400).json(response)
+    }
   } catch (e) {
-    res.status(404).json({
+    res.status(400).json({
       message: e,
     })
   }
@@ -259,7 +263,7 @@ const refreshTokenAPI = async (req, res) => {
     const accessToken = await JwtProvider.generateToken(
       userInfo,
       process.env.ACCESS_TOKEN,
-      '5s'
+      '30s'
     )
 
     res.status(200).json({ accessToken })
